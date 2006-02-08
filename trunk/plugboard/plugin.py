@@ -3,6 +3,7 @@
 
 from zope import interface
 import pkg_resources
+import types
 
 # Interfaces
 
@@ -11,13 +12,10 @@ class IPlugin(interface.Interface):
     A basic interface for allkind of plugins
     """
 
-    name = interface.Attribute("Complete name of the plugin")
-    summary = interface.Attribute("A summary about the plugin behavior")
     dispatcher = interface.Attribute("An IEventDispatcher object to let other plugins connect to the plugin trough events")
     application = interface.Attribute("Automatically set when initializing the plugin")
     context = interface.Attribute("Automatically set when loading the plugin into the current context")
     plugin = interface.Attribute("Automatically set when creating a new instance of the plugin to be plugged into another one")
-    dependencies = interface.Attribute("A list of interfaces that are required by the plugin")
 
     def __init__(self, application):
         """
@@ -58,6 +56,7 @@ class IPluginResource(interface.Interface):
         """
         Returns the list of detected plugins
         """
+    get_plugins.return_type = types.GeneratorType
 
     def refresh(self):
         """
@@ -68,8 +67,6 @@ class IPluginResource(interface.Interface):
 
 class Plugin(object):
     interface.implements(IPlugin)
-
-    signals = {}
 
     def __init__(self, application):
         pass

@@ -26,6 +26,7 @@ class IContext(interface.Interface):
         """
         Returns the set of IPlugin classes
         """
+    get_plugins.return_type = types.GeneratorType
     
     def clear(self):
         """
@@ -53,11 +54,13 @@ class IContextResource(interface.Interface):
         """
         Add a new context to this resource and return it
         """
+    add_context.return_type = IContext
 
     def get_context(self, name):
         """
         Returns the context with the given name
         """
+    get_context.return_type = IContext
 
     def remove_context(self, name):
         """
@@ -68,11 +71,13 @@ class IContextResource(interface.Interface):
         """
         Returns a list of context names
         """
+    get_context_names.return_type = types.GeneratorType
 
     def get_contexts(self):
         """
         Returns a list of all contexts
         """
+    get_contexts.return_type = types.GeneratorType
 
     def clear(self):
         """
@@ -88,11 +93,13 @@ class IContextResource(interface.Interface):
         """
         A wrap method to get_context
         """
+    __getitem__.return_type = IContext
 
     def __iter__(self):
         """
         A wrap method to get_contexts
         """
+    __iter__.return_type = types.GeneratorType
 
 # Implementation
 

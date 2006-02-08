@@ -5,6 +5,26 @@ from zope import interface
 from plugboard import plugin
 from types import MethodType
 
+class ISharedEventArgument(interface.Interface):
+    """
+    Contains informations about a specific event argument which can be changed by events
+    """
+
+    def __init__(self, value=None):
+        """
+        Initialize the argument with the given value
+        """
+
+    def get_value(self):
+        """
+        Returns the value of the argument
+        """
+
+    def set_value(self, value):
+        """
+        Set the new value of the argument
+        """
+
 class IEvent(interface.Interface):
     """
     Informations about an event, emitter and connector.
@@ -27,13 +47,25 @@ class IEventConnector(interface.Interface):
     """
     This is a convenience interface to make an easy connection with IEventDispatcher
     """
+
+    def connect_all(self):
+        """
+        Connect all events to all callable objects which start with "on_".
+        Pass extra arguments to IEvent.connect if defined in the event functions, e.g.:
+        def on_event_name(self, *args):
+            ...
+        on_event_name.extra = (arg1, arg2, ...)
+        """
+
+    def disconnect_all(self):
+        """
+        Disconnect all connected events
+        """
     
 class IEventDispatcher(interface.Interface):
     """
     Contains all events of a given object
     """
-
-    events = interface.Attribute("A list of IEvent")
 
     def add_event(self, name, *args):
         """
@@ -44,6 +76,7 @@ class IEventDispatcher(interface.Interface):
         """
         Returns the event with the given name
         """
+    get_event.return_type = IEvent
 
     def remove_event(self, name):
         """
@@ -54,21 +87,25 @@ class IEventDispatcher(interface.Interface):
         """
         Returns an iter of all events
         """
+    get_events.return_type = types.GeneratorType
 
     def get_event_names(self):
         """
         Returns an iter of all event names
         """
+    get_evevnts_name.return_type = types.GeneratorType
 
     def __getitem__(self):
         """
         A wrap method to get_event
         """
+    __getitem__.return_type = IEvent
 
     def __iter__(self):
         """
         A wrap method to get_events
         """
+    __iter__.return_type = types.GeneratorType
 
 class IEngine(interface.Interface):
     """
@@ -76,6 +113,18 @@ class IEngine(interface.Interface):
     """
 
 # Implementation
+
+class SharedEventArgument(object):
+    interface.implements(IEvent)
+
+    def __init__(self, value=None):
+        self._value = value
+
+    def get_value(self):
+        return self._value
+
+    def set_value(self, value):
+        self._value = value
 
 class Event(object):
     interface.implements(IEvent)
@@ -89,10 +138,22 @@ class EventConnector(object):
     def __init__(self, plugin):
         self.plugin = plugin
         self.dispatcher = plugin.dispatcher
+
+    def connect_all(self):
         for name in dir(self):
             value = getattr(self, name)
-            if not name.startswith('_') and self.dispatcher.has_event(name) and isinstance(value, MethodType):
-                self.dispatcher[name].connect(value)
+            if name.startswith('on_') and self.dispatcher.has_event(name[3:]) and callable(value):
+                try:
+                    extra = value.extra
+                except:
+                    extra = ()
+                self.dispatcher[name[3:]].connect(value, *extra)
+
+    def disconnect_all(self):
+        for name in dir(self):
+            value = getattr(self, name)
+            if name.startswith('on_') and self.dispatcher.has_event(name[3:]) and callable(value):
+                self.dispatcher[name[3:]].disconnect(value)
 
 class EventDispatcher(object):
     interface.implements(IEventDispatcher)
@@ -133,16 +194,48 @@ class Engine(object):
         self.application = application
         application.register(application, self)
 
+# PlugBoard plugin
+
+class PlugBoardEvent(Event):
+    def __init__(self, dispatcher):
+        super(PlugBoardEvent, self).__init__(dispatcher)
+        self._callbacks = {}
+
+    def emit(self, *args):
+        for callback, extra in self._callbacks.iteritems():
+            if callback(self.dispatcher.plugin, *(args+extra)):
+                return
+
+    def connect(self, callback, *extra):
+        self._callbacks[callback] = extra
+
+    def disconnect(self, callback):
+        del self._callbacks[callback]
+
+class PlugBoardEngine(Engine):
+    def __init__(self, application):
+        super(PlugBoardEngine, self).__init__(application)
+        application.register(plugin.IPlugin, EventDispatcher)
+        application.register(EventDispatcher, PlugBoardEvent)
+
 # GTK plugin
 
 class GTKEvent(Event):
     interface.implements(IEvent)
 
+    def __init__(self, dispatcher):
+        super(GTKEvent, self).__init__(dispatcher)
+        self._callbacks = {}
+
     def emit(self, *args):
         self.dispatcher._gobject.emit(self.name, *args)
 
     def connect(self, callback, *extra):
-        self.dispatcher._gobject.connect_object(self.name, callback, self.dispatcher.plugin, *extra)
+        self._callbacks[callback] = self.dispatcher._gobject.connect_object(self.name, callback, self.dispatcher.plugin, *extra)
+
+    def disconnect(self, callback):
+        self.dispatcher._gobject.disconnect(self._callbacks[callback])
+        del self._callbacks[callback]
 
 class GTKEventDispatcher(EventDispatcher):
     def __init__(self, plugin):

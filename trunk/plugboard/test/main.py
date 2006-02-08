@@ -55,8 +55,46 @@ class TestPlugBoard(unittest.TestCase):
         cr['test'].load()
         self.assertEqual(plugins.ITestPlugin(self.app).__class__, plugins.TestPlugin)
         cr['test'].load()
-        print plugins.ITestPlugin(self.app)
         self.assertEqual(plugins.ITestPlugin(self.app).__class__, plugins.TestPlugin)
+
+    def test_plugboard_engine(self):
+        self._install_setuptools_pr()
+        self._install_basic_cr()
+        engine.PlugBoardEngine(self.app)
+        cr = context.IContextResource(self.app)
+        cr['test'].load()
+        class EC(engine.EventConnector):
+            received = None
+            def on_test(self, *data):
+                self.received = data
+            on_test.extra = ('extra test',)
+        p = plugins.ITestPlugin(self.app)
+        ec = EC(p)
+        ec.connect_all()
+        p.dispatcher['test'].emit('plugboardengine test')
+        self.assertEqual(ec.received, (p, 'plugboardengine test', 'extra test',))
+        ec.received = None
+        ec.disconnect_all()
+        p.dispatcher['test'].emit('gtkengine test')
+        self.assertEqual(ec.received, None)
+
+    def test_shared_event_argument(self):
+        self._install_setuptools_pr()
+        self._install_basic_cr()
+        engine.GTKEngine(self.app)
+        cr = context.IContextResource(self.app)
+        cr['test'].load()
+        class EC(engine.EventConnector):
+            received = None
+            def on_test(self, plugin, data):
+                self.received = data.get_value()
+                data.set_value(self.received+'test')
+        p = plugins.ITestPlugin(self.app)
+        ec, ec2, ec3 = EC(p), EC(p), EC(p)
+        ec.connect_all(); ec2.connect_all(); ec3.connect_all()
+        p.dispatcher['test'].emit(engine.SharedEventArgument(''))
+        self.assertEqual((ec.received, ec2.received, ec3.received),
+                         ('', 'test', 'testtest'))
 
     def test_gtk_engine(self):
         self._install_setuptools_pr()
@@ -66,12 +104,18 @@ class TestPlugBoard(unittest.TestCase):
         cr['test'].load()
         class EC(engine.EventConnector):
             received = None
-            def test(self, *data):
+            def on_test(self, *data):
                 self.received = data
+            on_test.extra = ('extra test',)
         p = plugins.ITestPlugin(self.app)
         ec = EC(p)
+        ec.connect_all()
         p.dispatcher['test'].emit('gtkengine test')
-        self.assertEqual(ec.received, (p, 'gtkengine test',))
+        self.assertEqual(ec.received, (p, 'gtkengine test', 'extra test',))
+        ec.received = None
+        ec.disconnect_all()
+        p.dispatcher['test'].emit('gtkengine test',)
+        self.assertEqual(ec.received, None)
 
 def get_test_suite():
     return unittest.makeSuite(TestPlugBoard)
