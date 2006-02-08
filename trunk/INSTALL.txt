@@ -1,0 +1,10 @@
+Before installing PlugBoard you need these system requirments:
+- Python 2.4 or higher
+- Setuptools at http://www.python.org/pypi/setuptools
+- Zope interfaces at http://www.zope.org/Products/ZopeInterface/
+
+Run this command to install PlugBoard:
+# python setup.py install
+
+To run tests type after successful installation:
+$ python setup.py test

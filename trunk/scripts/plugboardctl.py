@@ -34,6 +34,7 @@ setup(
         setup = file(os.path.join(project_path, 'setup.py'), 'w')
         setup.write(setup_py)
         setup.close()
+        os.unlink(os.path.join(project_path, '__init__.py'))
         for curdir, dirs, files in os.walk(project_path):
             for filename in files:
                 if filename.endswith('.pyc'):

@@ -11,7 +11,7 @@ setup(
     license="MIT",
     author="Italian Python User Group",
     author_email='lethalman88@gmail.com',
-    url='http://plugboard.berlios.de',   
+    url='http://developer.berlios.de/projects/plugboard/',   
     packages=find_packages(),
     package_data={
                   'plugboard.skeleton': ['*.txt'],

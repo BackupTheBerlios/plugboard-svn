@@ -7,3 +7,9 @@ resource (get all available plugins in the application), a context resource
 (organize plugins into different contexts) and an engine to let plugins
 communicate each other into different environments (such as PlugBoard, Gtk,
 Wx, Qt, Twisted, and so on).
+
+To start a new project using a basic file structure type:
+$ plugboardctl.py create PROJECTNAME
+
+More informations can be found at
+http://developer.berlios.de/projects/plugboard/
