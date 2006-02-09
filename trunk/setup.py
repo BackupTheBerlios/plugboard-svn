@@ -5,7 +5,7 @@ import os
 
 setup(
     name="PlugBoard",
-    version="0.1",
+    version="0.1.1",
     description="An application framework to create plugin-based applications",
     long_description="""PlugBoard is an Application Framework made in Python built on top of
     setuptools and zope interfaces which help the developer create a
