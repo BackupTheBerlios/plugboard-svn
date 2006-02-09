@@ -1,7 +1,6 @@
-PlugBoard 0.1
+PlugBoard 0.1.1
 
-This is the first version of PlugBoard. It includes the following features:
-- Setuptools plugin resource
-- XML context resource
-- A simple built-in engine (PlugBoardEngine)
-- GTKEngine
+This is a really minor-fixes and documentation enhancements:
+- Unstable WXEngine
+- Basic documentation
+- Fixed minor bugs
