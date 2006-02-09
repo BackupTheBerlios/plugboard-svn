@@ -1,0 +1,246 @@
+%% LyX 1.3 created this file.  For more info, see http://www.lyx.org/.
+%% Do not edit unless you really know what you are doing.
+\documentclass[italian]{article}
+\usepackage[T1]{fontenc}
+\usepackage[latin1]{inputenc}
+
+\makeatletter
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% LyX specific LaTeX commands.
+\newcommand{\noun}[1]{\textsc{#1}}
+%% Bold symbol macro for standard LaTeX users
+\providecommand{\boldsymbol}[1]{\mbox{\boldmath $#1$}}
+
+
+\usepackage{babel}
+\makeatother
+\begin{document}
+
+\title{PlugBoard Documentation}
+
+
+\author{\emph{Italian Python User Group$^{\textrm{TM}}$}}
+
+\maketitle
+
+\part*{Phylosophy}
+
+\emph{A simple preamble about the history and the project purposes.}
+
+PlugBoard is born because of the need to create several plugin-based
+projects. These projects, currenly got a plugin management system
+many times different and not much organized. So, we decided to create
+a shared plugin system to use in all kinds of environments (my projects
+used GTK and console).
+
+Actually, we chose Zope Interfaces to gain a good abstraction level
+for both the framework and its based applications.
+
+The framework tries to offer as much utilities as possible to create
+a plugin-based application and at the same time to be as much flexible
+as possible, so that this framework could be applied to all kinds
+of projects.
+
+An application based on this phylosophy should base everything on
+plugins, to let plugins be the core of the application as well, even
+the programmer decide to let the core be pluggable.
+
+
+\part*{Components}
+
+\emph{Simply explain what components are found in PlugBoard and how
+they could be connected each other.}
+
+The main component of the framework is the \textbf{application interface}
+(\noun{iapplication)} used for reference by all other components:
+it should be initialized before using any other component. The application
+implementation should do nothing else that add some useful functions
+and hooks (such as adapters) to let the development be as the easier
+and faster as possible.
+
+After the application initialization, registered plugins (\noun{iplugin})
+must be found trough a plugin resource manager (\noun{ipluginresource}).
+The plugin resources then adds internally all found plugins and register
+itself (\emph{the instance}) as an \noun{iapplication} adapter,
+so that the application could implement its own plugin resource following
+the interface scheme.
+
+At this point, the application is configured and ready to be loaded
+using the context resource (\noun{icontextresource}), which groups
+some plugins and loads them passing for the following three states:
+
+\begin{itemize}
+\item \textbf{initialization}: loads all internal plugin variables without
+any interaction with other plugins
+\item \textbf{preloading}: perform initialization actions with other plugins
+and their initialized options (e.g. connecting to plugin events)
+\item \textbf{loading:} this is the last step, where all plugins could perform
+any action to interact with other plugins
+\end{itemize}
+\emph{This loading feature is indeed to remove all dependencies among
+plugins}
+
+Just after the initialization of each plugin, the plugin instance
+is registered as an adapter of \noun{iapplication} so plugins could
+reach other plugins adapting the application to the requested plugin
+interface.%
+\footnote{It's important to specify a different interface for all plugins. Note
+that registering an adaption replaces the previous one, so there can
+be only one interface implementation in each context.%
+}
+
+The last optional but recomended component is the \textbf{engine}
+(\noun{iengine}). It's something like a protocol that specifies
+how plugin communicate each other trough events and contain some useful
+utilities for a specified environment. Mandatory engine components
+are the event dispather (\noun{ieventdispatcher}, registered as
+an adaptiong for \noun{iplugin}) and its events (\noun{ievent},
+adaption for \noun{ieventdispatcher}).
+
+Then each plugin could have its own event dispatcher based on the
+current engine to let other plugins connect to it.
+
+Event connecting is also simplified by the \textbf{event connector}.
+Its behavior consists in getting all objects contained in self starting
+with \emph{{}``on\_''} and connecting them as callbacks for the
+rest of the object name as the event name to the specified plugin.
+Usually, it doesn't need to be implemented for each different engine
+since it uses the engine abstraction.
+
+
+\part*{Builtin plugin resources}
+
+
+\subsection*{Setuptools}
+
+The setuptools plugin resource is used to gain the list of application
+plugins registered using setuptools entry points.
+
+A simple usage:
+
+\begin{quote}
+from plugboard import plugin
+
+plugin.SetuptoolsPluginResource(application, 'application.entry.point').refresh()
+\end{quote}
+
+\part*{Builtin context resources}
+
+
+\subsection*{XML}
+
+This resource gains context informations from a \emph{xml.dom.minidom.Element}
+element, looking in its children.
+
+A simple usage:
+
+\begin{quote}
+from xml.dom import minidom
+
+xmlstr = {}``''''<root>
+
+<context name='ctx1'>
+
+<plugin path='app.plugins.APlugin' />
+
+<plugin path='app.plugins.BPlugin' />
+
+</context>
+
+{}``''''
+
+from plugboard import context
+
+context.XMLContextResource(application, minidom.parseString(xmlstr).documentElement).refresh()
+\end{quote}
+
+\part*{Builtin engines}
+
+
+\subsection*{PlugBoard}
+
+The PlugBoard engine doesn't define any utility for applications,
+since it's the most general purpose engine. However, it has a really
+simple method for event dispatching: it stores observer callbacks
+and call them when an \emph{emit} is requested.
+
+
+\subsection*{GTK}
+
+This engine can be used in GTK 2.8 or above, since it exploits the
+creation of GTK signals%
+\footnote{This can be done using the special class variable \emph{\_\_gsignals\_\_}.
+Read PyGTK FAQs for more informations.%
+} into a generic \emph{GObject}. So, everytime a signal is requested
+to be created, a new gobject is instantiated. To grant the integrity
+of the first argument passed to the callback to be the plugin instance
+and not the gobject when firing the event, \emph{connect\_object}
+is used instead of \emph{connect}.
+
+
+\part*{Engine utilities}
+
+
+\subsection*{EventConnector}
+
+This class automatically connects its callable attributes beggining
+with \emph{{}``on\_''} to the specified plugin. The event name to
+be used is described in the object name itself, just after the {}``on\_''
+string: for example {}``on\_new'' would connect to the event {}``new''.
+For instance, these callable objects (usually methods) could hold
+an attribute called \emph{extra} which contains extra arguments to
+be passed to the \emph{connect} method of \noun{ievent.}
+
+A simple usage:
+
+\begin{quote}
+from plugboard import plugin, engine
+
+from zope.interface import implements
+
+import interfaces
+
+class APlugin(plugin.Plugin):
+\begin{quote}
+implements(interface.IAPlugin)
+
+def \_\_init\_\_(self, application):
+\begin{quote}
+self.dispatcher = engine.IEventDispatcher(self)
+
+self.dispatcher.add\_event('new', (str, 'Some data type'))
+\end{quote}
+def load(self, context):
+\begin{quote}
+self.dispatcher{[}'new'{]}.emit('Some data')
+\end{quote}
+\end{quote}
+class BToAEventConnector(engine.EventConnector):
+\begin{quote}
+def on\_new(self, plugin, data, extra):
+\begin{quote}
+\emph{...}
+\end{quote}
+\end{quote}
+class BPlugin(plugin.Plugin):
+\begin{quote}
+implements(interfaces.IBPlugin)
+
+def preload(self, application):
+\begin{quote}
+ec = BToAEventConnector(interfaces.IAPlugin(application))
+
+ec.on\_new.extra = ('first extra argument',)
+\end{quote}
+\end{quote}
+\end{quote}
+
+\part*{Basic tutorial}
+
+{*}TODO
+
+
+\part*{Advanced application}
+
+{*}TODO
+\end{document}

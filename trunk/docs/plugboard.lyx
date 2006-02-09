@@ -1,0 +1,516 @@
+#LyX 1.3 created this file. For more info see http://www.lyx.org/
+\lyxformat 221
+\textclass article
+\language italian
+\inputencoding auto
+\fontscheme default
+\graphics default
+\paperfontsize default
+\papersize Default
+\paperpackage a4
+\use_geometry 0
+\use_amsmath 0
+\use_natbib 0
+\use_numerical_citations 0
+\paperorientation portrait
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\defskip medskip
+\quotes_language english
+\quotes_times 2
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+
+\layout Title
+
+PlugBoard Documentation
+\layout Author
+
+
+\emph on 
+Italian Python User Group
+\begin_inset Formula $^{\textrm{TM}}$
+\end_inset 
+
+
+\layout Part*
+
+Phylosophy
+\layout Standard
+
+
+\emph on 
+A simple preamble about the history and the project purposes.
+\layout Standard
+
+PlugBoard is born because of the need to create several plugin-based projects.
+ These projects, currenly got a plugin management system many times different
+ and not much organized.
+ So, we decided to create a shared plugin system to use in all kinds of
+ environments (my projects used GTK and console).
+\layout Standard
+
+Actually, we chose Zope Interfaces to gain a good abstraction level for
+ both the framework and its based applications.
+\layout Standard
+
+The framework tries to offer as much utilities as possible to create a plugin-ba
+sed application and at the same time to be as much flexible as possible,
+ so that this framework could be applied to all kinds of projects.
+\layout Standard
+
+An application based on this phylosophy should base everything on plugins,
+ to let plugins be the core of the application as well, even the programmer
+ decide to let the core be pluggable.
+\layout Part*
+
+Components
+\layout Standard
+
+
+\emph on 
+Simply explain what components are found in PlugBoard and how they could
+ be connected each other.
+\layout Standard
+
+The main component of the framework is the 
+\series bold 
+application interface
+\series default 
+ (
+\noun on 
+iapplication)
+\noun default 
+ used for reference by all other components: it should be initialized before
+ using any other component.
+ The application implementation should do nothing else that add some useful
+ functions and hooks (such as adapters) to let the development be as the
+ easier and faster as possible.
+\layout Standard
+
+After the application initialization, registered plugins (
+\noun on 
+iplugin
+\noun default 
+) must be found trough a plugin resource manager (
+\noun on 
+ipluginresource
+\noun default 
+).
+ The plugin resources then adds internally all found plugins and register
+ itself (
+\emph on 
+the instance
+\emph default 
+) as an 
+\noun on 
+iapplication
+\noun default 
+ adapter, so that the application could implement its own plugin resource
+ following the interface scheme.
+\layout Standard
+
+At this point, the application is configured and ready to be loaded using
+ the context resource (
+\noun on 
+icontextresource
+\noun default 
+), which groups some plugins and loads them passing for the following three
+ states:
+\layout Itemize
+
+
+\series bold 
+initialization
+\series default 
+: loads all internal plugin variables without any interaction with other
+ plugins
+\layout Itemize
+
+
+\series bold 
+preloading
+\series default 
+: perform initialization actions with other plugins and their initialized
+ options (e.g.
+ connecting to plugin events)
+\layout Itemize
+
+
+\series bold 
+loading:
+\series default 
+ this is the last step, where all plugins could perform any action to interact
+ with other plugins
+\layout Standard
+
+
+\emph on 
+This loading feature is indeed to remove all dependencies among plugins
+\layout Standard
+
+Just after the initialization of each plugin, the plugin instance is registered
+ as an adapter of 
+\noun on 
+iapplication
+\noun default 
+ so plugins could reach other plugins adapting the application to the requested
+ plugin interface.
+\begin_inset Foot
+collapsed true
+
+\layout Standard
+
+It's important to specify a different interface for all plugins.
+ Note that registering an adaption replaces the previous one, so there can
+ be only one interface implementation in each context.
+\end_inset 
+
+
+\layout Standard
+
+The last optional but recomended component is the 
+\series bold 
+engine
+\series default 
+ (
+\noun on 
+iengine
+\noun default 
+).
+ It's something like a protocol that specifies how plugin communicate each
+ other trough events and contain some useful utilities for a specified environme
+nt.
+ Mandatory engine components are the event dispather (
+\noun on 
+ieventdispatcher
+\noun default 
+, registered as an adaptiong for 
+\noun on 
+iplugin
+\noun default 
+) and its events (
+\noun on 
+ievent
+\noun default 
+, adaption for 
+\noun on 
+ieventdispatcher
+\noun default 
+).
+\layout Standard
+
+Then each plugin could have its own event dispatcher based on the current
+ engine to let other plugins connect to it.
+\layout Standard
+
+Event connecting is also simplified by the 
+\series bold 
+event connector
+\series default 
+.
+ Its behavior consists in getting all objects contained in self starting
+ with 
+\emph on 
+
+\begin_inset Quotes eld
+\end_inset 
+
+on_
+\begin_inset Quotes erd
+\end_inset 
+
+
+\emph default 
+ and connecting them as callbacks for the rest of the object name as the
+ event name to the specified plugin.
+ Usually, it doesn't need to be implemented for each different engine since
+ it uses the engine abstraction.
+\layout Part*
+
+Builtin plugin resources
+\layout Subsection*
+
+Setuptools
+\layout Standard
+
+The setuptools plugin resource is used to gain the list of application plugins
+ registered using setuptools entry points.
+\layout Standard
+
+A simple usage:
+\layout Quote
+
+from plugboard import plugin
+\layout Quote
+
+plugin.SetuptoolsPluginResource(application, 'application.entry.point').refresh()
+\layout Part*
+
+Builtin context resources
+\layout Subsection*
+
+XML
+\layout Standard
+
+This resource gains context informations from a 
+\emph on 
+xml.dom.minidom.Element
+\emph default 
+ element, looking in its children.
+\layout Standard
+
+A simple usage:
+\layout Quote
+
+from xml.dom import minidom
+\layout Quote
+
+xmlstr = 
+\begin_inset Quotes eld
+\end_inset 
+
+
+\begin_inset Quotes erd
+\end_inset 
+
+
+\begin_inset Quotes erd
+\end_inset 
+
+<root>
+\layout Quote
+
+<context name='ctx1'>
+\layout Quote
+
+<plugin path='app.plugins.APlugin' />
+\layout Quote
+
+<plugin path='app.plugins.BPlugin' />
+\layout Quote
+
+</context>
+\layout Quote
+
+
+\begin_inset Quotes eld
+\end_inset 
+
+
+\begin_inset Quotes erd
+\end_inset 
+
+
+\begin_inset Quotes erd
+\end_inset 
+
+
+\layout Quote
+
+from plugboard import context
+\layout Quote
+
+context.XMLContextResource(application, minidom.parseString(xmlstr).documentElement
+).refresh()
+\layout Part*
+
+Builtin engines
+\layout Subsection*
+
+PlugBoard
+\layout Standard
+
+The PlugBoard engine doesn't define any utility for applications, since
+ it's the most general purpose engine.
+ However, it has a really simple method for event dispatching: it stores
+ observer callbacks and call them when an 
+\emph on 
+emit
+\emph default 
+ is requested.
+\layout Subsection*
+
+GTK
+\layout Standard
+
+This engine can be used in GTK 2.8 or above, since it exploits the creation
+ of GTK signals
+\begin_inset Foot
+collapsed true
+
+\layout Standard
+
+This can be done using the special class variable 
+\emph on 
+__gsignals__
+\emph default 
+.
+ Read PyGTK FAQs for more informations.
+\end_inset 
+
+ into a generic 
+\emph on 
+GObject
+\emph default 
+.
+ So, everytime a signal is requested to be created, a new gobject is instantiate
+d.
+ To grant the integrity of the first argument passed to the callback to
+ be the plugin instance and not the gobject when firing the event, 
+\emph on 
+connect_object
+\emph default 
+ is used instead of 
+\emph on 
+connect
+\emph default 
+.
+\layout Part*
+
+Engine utilities
+\layout Subsection*
+
+EventConnector
+\layout Standard
+
+This class automatically connects its callable attributes beggining with
+ 
+\emph on 
+
+\begin_inset Quotes eld
+\end_inset 
+
+on_
+\begin_inset Quotes erd
+\end_inset 
+
+
+\emph default 
+ to the specified plugin.
+ The event name to be used is described in the object name itself, just
+ after the 
+\begin_inset Quotes eld
+\end_inset 
+
+on_
+\begin_inset Quotes erd
+\end_inset 
+
+ string: for example 
+\begin_inset Quotes eld
+\end_inset 
+
+on_new
+\begin_inset Quotes erd
+\end_inset 
+
+ would connect to the event 
+\begin_inset Quotes eld
+\end_inset 
+
+new
+\begin_inset Quotes erd
+\end_inset 
+
+.
+ For instance, these callable objects (usually methods) could hold an attribute
+ called 
+\emph on 
+extra
+\emph default 
+ which contains extra arguments to be passed to the 
+\emph on 
+connect
+\emph default 
+ method of 
+\noun on 
+ievent.
+\layout Standard
+
+A simple usage:
+\layout Quote
+
+from plugboard import plugin, engine
+\layout Quote
+
+from zope.interface import implements
+\layout Quote
+
+import interfaces
+\layout Quote
+
+class APlugin(plugin.Plugin):
+\begin_deeper 
+\layout Quote
+
+implements(interface.IAPlugin)
+\layout Quote
+
+def __init__(self, application):
+\begin_deeper 
+\layout Quote
+
+self.dispatcher = engine.IEventDispatcher(self)
+\layout Quote
+
+self.dispatcher.add_event('new', (str, 'Some data type'))
+\end_deeper 
+\layout Quote
+
+def load(self, context):
+\begin_deeper 
+\layout Quote
+
+self.dispatcher['new'].emit('Some data')
+\end_deeper 
+\end_deeper 
+\layout Quote
+
+class BToAEventConnector(engine.EventConnector):
+\begin_deeper 
+\layout Quote
+
+def on_new(self, plugin, data, extra):
+\begin_deeper 
+\layout Quote
+
+
+\emph on 
+...
+\end_deeper 
+\end_deeper 
+\layout Quote
+
+class BPlugin(plugin.Plugin):
+\begin_deeper 
+\layout Quote
+
+implements(interfaces.IBPlugin)
+\layout Quote
+
+def preload(self, application):
+\begin_deeper 
+\layout Quote
+
+ec = BToAEventConnector(interfaces.IAPlugin(application))
+\layout Quote
+
+ec.on_new.extra = ('first extra argument',)
+\end_deeper 
+\end_deeper 
+\layout Part*
+
+Basic tutorial
+\layout Standard
+
+*TODO
+\layout Part*
+
+Advanced application
+\layout Standard
+
+*TODO
+\the_end

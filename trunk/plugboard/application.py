@@ -3,7 +3,7 @@
 
 from zope import interface
 from zope.interface import adapter
-import pkg_resources
+import pkg_resources, sys
 
 class IApplication(interface.Interface):
     """
@@ -30,10 +30,10 @@ class Application(object):
         interface.interface.adapter_hooks = [self._adapter_hook]
 
     def _adapter_hook(self, provided, obj):
-        try:
-            return self.registry.adapter_hook(provided, obj)
-        except TypeError:
-            adapter = self.registry.lookup([interface.providedBy(obj)], provided, '')
+        adapter = self.registry.lookup1(interface.providedBy(obj), provided, '')
+        if callable(adapter):
+            return adapter(obj)
+        else:
             adapter.application = self
             return adapter
 

@@ -4,6 +4,7 @@
 from zope import interface
 from xml.dom import minidom
 from plugboard import plugin
+import types
 
 class IContext(interface.Interface):
     """
@@ -130,8 +131,8 @@ class Context(object):
             self.resource.current.unload()
         self._loaded.clear()
         for plugin in self._plugins:
+            plugin.application = app
             plugin_instance = plugin(app)
-            plugin_instance.application = app
             app.register(app, plugin_instance)
             self._loaded.add(plugin_instance)
         self.resource.current = self

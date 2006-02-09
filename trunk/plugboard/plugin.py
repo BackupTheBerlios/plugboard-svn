@@ -103,8 +103,6 @@ class PluginResource(object):
 # Plugins
 
 class SetuptoolsPluginResource(PluginResource):
-    _plugins = set()
-
     def __init__(self, application, plugins_path):
         super(SetuptoolsPluginResource, self).__init__(application)
         self.plugins_path = plugins_path

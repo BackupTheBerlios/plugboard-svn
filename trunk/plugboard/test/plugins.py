@@ -14,5 +14,5 @@ class TestPlugin(plugin.Plugin):
         try:
             self.dispatcher = engine.IEventDispatcher(self)
             self.dispatcher.add_event('test', (str, 'test data'))
-        except TypeError:
+        except:
             pass

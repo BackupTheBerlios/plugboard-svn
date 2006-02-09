@@ -3,7 +3,7 @@
 
 from zope import interface
 from plugboard import plugin
-from types import MethodType
+import types
 
 class ISharedEventArgument(interface.Interface):
     """
@@ -93,7 +93,7 @@ class IEventDispatcher(interface.Interface):
         """
         Returns an iter of all event names
         """
-    get_evevnts_name.return_type = types.GeneratorType
+    get_event_names.return_type = types.GeneratorType
 
     def __getitem__(self):
         """
@@ -260,3 +260,41 @@ class GTKEngine(Engine):
         super(GTKEngine, self).__init__(application)
         application.register(plugin.IPlugin, GTKEventDispatcher)
         application.register(GTKEventDispatcher, GTKEvent)
+
+# WX Plugin
+
+class WXEvent(Event):
+    def __init__(self, dispatcher):
+        import wx
+        super(WXEvent, self).__init__(dispatcher)
+        self._widget = wx.Button(dispatcher._widget, -1)
+        
+    def emit(self, *args):
+        import wx
+        evt = wx.PyCommandEvent(self.dispatcher._event, self._widget.GetId())
+        evt.event_arguments = args
+        self._widget.GetEventHandler().ProcessEvent(evt)
+        
+    def connect(self, callback, *extra):
+        self.dispatcher._binded.Bind(self.dispatcher._binder, self._fire(callback, extra), id(callback))
+
+    def _fire(self, callback, extra):
+        def event_callback(event, callback=callback, extra=extra):
+            print event, callback, extra
+        return event_callback
+
+class WXEventDispatcher(EventDispatcher):
+    def __init__(self, plugin):
+        import wx
+        super(WXEventDispatcher, self).__init__(plugin)
+        self._event = wx.NewEventType()
+        self._binder = wx.PyEventBinder(self._event, 1)
+        self._widget = wx.Panel(None, -1)
+
+class WXEngine(Engine):
+    def __init__(self, application):
+        import wx
+        super(WXEngine, self).__init__(application)
+        self._app = wx.App()
+        application.register(plugin.IPlugin, WXEventDispatcher)
+        application.register(WXEventDispatcher, WXEvent)
