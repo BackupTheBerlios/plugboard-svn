@@ -5,7 +5,7 @@ import os
 
 setup(
     name="PlugBoard",
-    version="0.1.1",
+    version="0.2",
     description="An application framework to create plugin-based applications",
     long_description="""PlugBoard is an Application Framework made in Python built on top of
     setuptools and zope interfaces which help the developer create a
@@ -19,7 +19,7 @@ setup(
     license="MIT",
     author="Italian Python User Group",
     author_email='lethalman88@gmail.com',
-    url='http://developer.berlios.de/projects/plugboard/',   
+    url='http://plugboard.berlios.de',   
     packages=find_packages(),
     package_data={
                   'plugboard.skeleton': ['*.txt'],

@@ -13,33 +13,33 @@ class IContext(interface.Interface):
 
     name = interface.Attribute("The name of the context")
 
-    def add_plugins(self, plugin_set):
+    def add_plugins(plugins):
         """
         Add a new set of IPlugin classes to the context
         """
 
-    def remove_plugins(self, plugin_set):
+    def remove_plugins(plugins):
         """
         Remove the given set of IPlugin classes
         """
 
-    def get_plugins(self):
+    def get_plugins():
         """
         Returns the set of IPlugin classes
         """
     get_plugins.return_type = types.GeneratorType
     
-    def clear(self):
+    def clear():
         """
         Clear all context plugin list
         """
 
-    def load(self):
+    def load():
         """
         Unload working context, and load plugins
         """
 
-    def unload(self):
+    def unload():
         """
         Unload context plugins only if this is the working context
         """
@@ -51,52 +51,52 @@ class IContextResource(interface.Interface):
 
     current = interface.Attribute("Current loaded context")
 
-    def add_context(self, name, plugins):
+    def add_context(name, plugins):
         """
         Add a new context to this resource and return it
         """
     add_context.return_type = IContext
 
-    def get_context(self, name):
+    def get_context(name):
         """
         Returns the context with the given name
         """
     get_context.return_type = IContext
 
-    def remove_context(self, name):
+    def remove_context(name):
         """
         Remove the context with the given name
         """
 
-    def get_context_names(self):
+    def get_context_names():
         """
         Returns a list of context names
         """
     get_context_names.return_type = types.GeneratorType
 
-    def get_contexts(self):
+    def get_contexts():
         """
         Returns a list of all contexts
         """
     get_contexts.return_type = types.GeneratorType
 
-    def clear(self):
+    def clear():
         """
         Remove all contexts
         """
 
-    def refresh(self):
+    def refresh():
         """
         Reload contexts
         """
 
-    def __getitem__(self):
+    def __getitem__():
         """
         A wrap method to get_context
         """
     __getitem__.return_type = IContext
 
-    def __iter__(self):
+    def __iter__():
         """
         A wrap method to get_contexts
         """
@@ -119,7 +119,7 @@ class Context(object):
         self._plugins.difference_update(plugins)
 
     def get_plugins(self):
-        return self._plugins
+        return iter(self._plugins)
 
     def clear(self):
         for i in xrange(len(self._plugins)):
@@ -185,6 +185,30 @@ class ContextResource(object):
         pass
 
     __getitem__, __iter__ = get_context, get_contexts
+
+# Dict Plugin
+class DictContextResource(ContextResource):
+    def __init__(self, application, dict=None):
+        """
+        Retrieve contexts from the given dict, e.g.:
+        dict = {'context_name': ['package.plugins.PluginClass', ...], ...}
+        """
+        super(DictContextResource, self).__init__(application)
+        application.register(self, Context)
+        self.dict = dict
+
+    def refresh(self, dict=None):
+        self._contexts.clear()
+        if dict:
+            self.dict = dict
+        plugins_res = plugin.IPluginResource(self.application)
+        for context_name, plugin_names in self.dict.iteritems():
+            plugins_list = set()
+            for plugin_name in plugin_names:
+                for plg in plugins_res.get_plugins():
+                    if plg.__module__+'.'+plg.__name__ == plugin_name:
+                        plugins_list.add(plg)
+            self.add_context(context_name, plugins_list)
 
 # XML Plugin
 

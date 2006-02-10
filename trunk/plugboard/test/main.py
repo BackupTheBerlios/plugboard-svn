@@ -92,7 +92,9 @@ class TestPlugBoard(unittest.TestCase):
         p = plugins.ITestPlugin(self.app)
         ec, ec2, ec3 = EC(p), EC(p), EC(p)
         ec.connect_all(); ec2.connect_all(); ec3.connect_all()
-        p.dispatcher['test'].emit(engine.SharedEventArgument(''))
+        sharg = engine.SharedEventArgument()
+        sharg.set_value('')
+        p.dispatcher['test'].emit(sharg)
         self.assertEqual((ec.received, ec2.received, ec3.received),
                          ('', 'test', 'testtest'))
 

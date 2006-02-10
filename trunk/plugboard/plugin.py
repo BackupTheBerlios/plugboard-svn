@@ -17,32 +17,27 @@ class IPlugin(interface.Interface):
     context = interface.Attribute("Automatically set when loading the plugin into the current context")
     plugin = interface.Attribute("Automatically set when creating a new instance of the plugin to be plugged into another one")
 
-    def __init__(self, application):
-        """
-        Initialize plugin
-        """
-
-    def preload(self, context):
+    def preload(context):
         """
         Called before loading the plugin
         """
 
-    def load(self, context):
+    def load(context):
         """
         Load plugin in the current context
         """       
 
-    def plug(self, plugin):
+    def plug(plugin):
         """
         Plug the plugin into another plugin
         """
 
-    def unload(self, context):
+    def unload(context):
         """
         Unload plugin from the current context
         """
 
-    def unplug(self, plugin):
+    def unplug(plugin):
         """
         Unplug the plugin from another plugin
         """
@@ -52,13 +47,13 @@ class IPluginResource(interface.Interface):
     Application plugin control which contains all available plugins
     """
 
-    def get_plugins(self):
+    def get_plugins():
         """
         Returns the list of detected plugins
         """
     get_plugins.return_type = types.GeneratorType
 
-    def refresh(self):
+    def refresh():
         """
         Refresh the list of plugins
         """

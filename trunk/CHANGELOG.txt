@@ -1,3 +1,12 @@
+10-Feb-2006
+	** Removed __init__ and self from interface functions
+	** Fixed SharedEventArgument
+	** Fixed plugboardctl
+	* Added new DictContextResource
+	* Changed SharedEventArgument initialization behavior
+	* Added a simple example
+	* Various fixes
+
 09-Feb-2006
 	* Released PlugBoard 0.1.1
 	* Added a basic documentation

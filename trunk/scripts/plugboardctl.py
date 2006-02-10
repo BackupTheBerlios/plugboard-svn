@@ -1,6 +1,7 @@
 from optparse import OptionParser
 import os, shutil
 from pkg_resources import Requirement, resource_filename
+import plugboard
 
 class CreateCommand(object):
     def __init__(self, main):
@@ -18,7 +19,7 @@ setup(
     [%(project_name)s.plugins]
     
     \"\"\",
-    install_requires=["PlugBoard>=0.1"],
+    install_requires=["PlugBoard>=%(plugboard_version)s"],
     )
 """
 
@@ -30,7 +31,8 @@ setup(
         project_path = os.path.abspath(project_name)
         os.rename(os.path.join(project_path, '_app_'), os.path.join(project_path, project_name))
         setup_py = self.setup_tmpl % {'project_name': project_name,
-                                      'project_title': project_name.title()}
+                                      'project_title': project_name.title(),
+                                      'plugboard_version': plugboard.__version__}
         setup = file(os.path.join(project_path, 'setup.py'), 'w')
         setup.write(setup_py)
         setup.close()
@@ -39,6 +41,8 @@ setup(
             for filename in files:
                 if filename.endswith('.pyc'):
                     os.unlink(os.path.join(curdir, filename))
+            if '.svn' in dirs:
+                shutil.rmtree(os.path.join(curdir, '.svn'))
 
 class Main(object):
     def __init__(self):

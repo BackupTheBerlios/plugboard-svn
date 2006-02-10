@@ -10,17 +10,12 @@ class ISharedEventArgument(interface.Interface):
     Contains informations about a specific event argument which can be changed by events
     """
 
-    def __init__(self, value=None):
-        """
-        Initialize the argument with the given value
-        """
-
-    def get_value(self):
+    def get_value():
         """
         Returns the value of the argument
         """
 
-    def set_value(self, value):
+    def set_value(value):
         """
         Set the new value of the argument
         """
@@ -33,14 +28,14 @@ class IEvent(interface.Interface):
     name = interface.Attribute("The name of the event")
     arguments = interface.Attribute("A list of tuples defining the type and the description of each argument, e.g.: [(str, 'A string'), (int, 'An int')]")
 
-    def emit(self, *args):
+    def emit(*args):
         """
         Emits the event
         """
 
-    def connect(self, callback, *extra):
+    def connect(callback, *extra):
         """
-        Connect to this event
+        Connect to the event
         """
 
 class IEventConnector(interface.Interface):
@@ -48,7 +43,7 @@ class IEventConnector(interface.Interface):
     This is a convenience interface to make an easy connection with IEventDispatcher
     """
 
-    def connect_all(self):
+    def connect_all():
         """
         Connect all events to all callable objects which start with "on_".
         Pass extra arguments to IEvent.connect if defined in the event functions, e.g.:
@@ -57,7 +52,7 @@ class IEventConnector(interface.Interface):
         on_event_name.extra = (arg1, arg2, ...)
         """
 
-    def disconnect_all(self):
+    def disconnect_all():
         """
         Disconnect all connected events
         """
@@ -67,41 +62,41 @@ class IEventDispatcher(interface.Interface):
     Contains all events of a given object
     """
 
-    def add_event(self, name, *args):
+    def add_event(name, *args):
         """
         A wrap method to create an IEvent
         """
 
-    def get_event(self, name):
+    def get_event(name):
         """
         Returns the event with the given name
         """
     get_event.return_type = IEvent
 
-    def remove_event(self, name):
+    def remove_event(name):
         """
         Removes the event which got the given name from events
         """
 
-    def get_events(self):
+    def get_events():
         """
         Returns an iter of all events
         """
     get_events.return_type = types.GeneratorType
 
-    def get_event_names(self):
+    def get_event_names():
         """
         Returns an iter of all event names
         """
     get_event_names.return_type = types.GeneratorType
 
-    def __getitem__(self):
+    def __getitem__():
         """
         A wrap method to get_event
         """
     __getitem__.return_type = IEvent
 
-    def __iter__(self):
+    def __iter__():
         """
         A wrap method to get_events
         """
@@ -115,10 +110,10 @@ class IEngine(interface.Interface):
 # Implementation
 
 class SharedEventArgument(object):
-    interface.implements(IEvent)
+    interface.implements(ISharedEventArgument)
 
-    def __init__(self, value=None):
-        self._value = value
+    def __init__(self):
+        self._value = None
 
     def get_value(self):
         return self._value
@@ -261,7 +256,7 @@ class GTKEngine(Engine):
         application.register(plugin.IPlugin, GTKEventDispatcher)
         application.register(GTKEventDispatcher, GTKEvent)
 
-# WX Plugin
+# WX Plugin (unstable)
 
 class WXEvent(Event):
     def __init__(self, dispatcher):

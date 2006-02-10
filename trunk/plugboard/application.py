@@ -12,12 +12,7 @@ class IApplication(interface.Interface):
 
     plugins = interface.Attribute("A list of found PlugBoard plugins")
 
-    def __init__(self):
-        """
-        Create an application and give the path where to search for plugin entries
-        """
-
-    def register(self, ofrom, oto, name=''):
+    def register(ofrom, oto, name=''):
         """
         Register adaption from ofrom object to oto object gaining automatically their interfaces
         """
