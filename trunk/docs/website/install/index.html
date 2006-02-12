@@ -1,0 +1,108 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>Download and Install &laquo; PlugBoard</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<style type="text/css">@import url('../s/site.css');</style>  
+<link media="print" href="../s/print.css" rel="stylesheet" type="text/css"  />
+</head>
+
+<body id="install-page">
+
+<div id="main"> 
+    <div class="hidden"><a href="#content">Skip to content</a></div> 
+<div id="header">         
+    <h1><span>PlugBoard, the flexible framework to create plugin-based applications.</span></h1>    
+    <div id="top-nav">
+    <ul>
+        <li><a id="a_home" href="/">Home</a></li>   
+        <li><a id="a_about" href="../about/">About</a></li> 
+        <li><a id="a_install" href="../install/">Install</a></li>   
+        <li><a id="a_docs" href="../docs/">Documentation</a></li>                    
+        <li><a id="a_dev" href="../development/">Development</a></li>
+    </ul>    
+    
+    <form action="http://www.google.com/custom" method="get">
+
+    <input type="hidden" name="sitesearch" value="plugboard.berlios.de" />
+    <!-- style="vertical-align: middle" -->
+    Search site with Google <input onfocus="this.select();" type="text" size="20" maxlength="255" name="q" value="" /> 
+    </form>
+
+    </div>
+    
+</div>
+    
+   <div id="content">         
+
+
+<h2>Prerequisites</h2>
+<p>PlugBoard needs at least Python 2.4 and <a href="http://www.zope.org/Products/ZopeInterface/">zope interfaces</a></p>
+
+<h2>Download and Install</h2>
+
+<ol>
+<li>
+    Download the <a href="./ez_setup.py">ez_setup.py</a> bootstrap script.
+</li>
+<li>
+    <p>Once downloaded <code>ez_setup.py</code> run it on your machine, using the parameters that follows:</p>    
+<pre>
+python ez_setup.py -f http://plugboard.berlios.de/install/ PlugBoard
+</pre>
+</li>
+
+<!--
+<li>
+    If everthing went well you have installed Subway, and you can procede with the <a href="/docs/quickstart.html">Quick start</a>.
+</li>
+-->
+</ol>
+
+
+<div class="note">
+<h3>Note</h3>
+<p>The <code>ez_setup.py</code> script will scan this page and will download and install for you the following packages:</p>
+
+<ul>
+<li><a href="http://download.berlios.de/plugboard/PlugBoard-0.1.1-py2.4.egg">PlugBoard 0.1.1</a></li>
+</ul>
+
+</div>
+
+<h2>Give it a spin</h2>
+<p>
+Once installed, set up your first project:
+</p>
+
+<pre>
+plugboardctl.py create <em>my_project</em>
+</pre>
+
+<p>Your project will be created in the directory <em>my_project</em>. 
+    
+<div class="note">
+<h3>Note</h3>
+
+<p>The creation of the project is nothing else a beginning directory structure with a <em>setup.py</em> script automatically written. This means you are <strong>not forced</strong> to use this structure for your projects.</p>
+
+</div>
+
+    
+    <!-- end content -->
+    </div> 
+
+
+
+
+    
+<div id="footer">        
+    <p><a href="#main">Top^</a> | All contents by <a href="http://www.deelan.com">deelan</a>, <a href="http://creativecommons.org/licenses/by-sa/2.5/">some rights reserved</a> | Page last modified Dec 05, 2005 </p>    
+</div>
+</div>
+
+
+</body>
+</html>
+

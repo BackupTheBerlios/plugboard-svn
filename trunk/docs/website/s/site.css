@@ -1,0 +1,353 @@
+@import url("typo.css");
+@import url("form.css");
+
+/*---------------------------------------------------
+=top elements 
+---------------------------------------------------*/
+
+html {
+	/*background: #fff url(/i/subway-v.png) bottom right no-repeat;     */
+	background: #fff;
+}
+
+body { 
+	color: #003366; 
+
+	margin: 3em 0;
+	padding: 0;	
+}
+
+/* help browser to not forget */
+body, p, li, td, th, dd, dt, code, h1, h2, h3, h4, h5, h6 
+{		
+	font: normal small/150% verdana, geneva, arial, sans-serif;
+}
+
+a img {
+	border: none;
+}
+
+/* ---------------------------------------------------
+=headings
+------------------------------------------------------ */
+
+h1, h2, h3, h4, h5, h6  {
+	
+	margin: 0;	
+	margin-top: 1em;
+	padding: 0;     
+	
+	font: bold 100%/100% "Trebuchet MS", geneva, arial, sans-serif;
+	color: #ff9933;
+
+	
+	text-transform: uppercase;
+}
+
+h1 {
+	height: 90px;
+	width: 300px;
+	background: #fff url(/i/subway-logo.jpg) bottom right no-repeat;     
+}
+
+h1 span {
+	display: none;
+}
+
+
+h2 {
+	font-size: 200%;	
+	
+}
+
+h3 {
+	font-size: 150%;
+	color: #999;
+	
+	text-transform: none;
+}
+
+h2:target, h3:target {
+	color: #003366;
+}
+
+/*---------------------------------------------------
+=main wrapper box 
+---------------------------------------------------*/
+
+#main {	
+	margin: 0 auto; 
+	padding: 0; 
+
+	width: 48em;
+	
+}
+
+
+/*---------------------------------------------------
+=header 
+---------------------------------------------------*/
+
+#header { 
+	margin: 0;
+	margin-bottom: 3em;
+}
+
+
+
+/*---------------------------------------------------
+=content wrapper (on the right)
+---------------------------------------------------*/
+
+#content{
+	padding: 0; 
+	margin: 0;
+}
+
+#content p {
+	margin: .5em 0;		
+	padding: 0;
+}
+
+
+/*---------------------------------------------------
+=footer
+---------------------------------------------------*/
+
+
+#footer {
+	margin: 0; 
+	margin-top: 2em; 
+    padding: 0;
+
+	/* float reset */
+	clear: both;	  
+}
+
+#footer p {
+	margin: 0 auto; 
+    padding: 0;		
+	
+    color: #666;
+	
+	font-size: 80%;
+}
+
+/*---------------------------------------------------
+=hyperlinks
+---------------------------------------------------*/
+
+a:link, a:visited, a:hover, a:active {
+	color: #003366;
+	
+	padding: 0 1px;
+	padding-bottom: 2px;
+	
+	text-decoration: none;
+	/*border-bottom: 1px dotted #5588bb;*/
+	border-bottom: 1px solid #ccc;
+	
+	font-weight: bold;
+}
+
+a:visited {
+
+}
+
+a:hover {
+	color: #fff;
+	background: #ff9933;
+	/*background: transparent url(/i/bg-link.gif) bottom left repeat-x;*/
+	
+	/*border-bottom: 1px solid #5588bb;*/
+	border-bottom: none;
+
+}
+
+
+/*---------------------------------------------------
+=utilities
+---------------------------------------------------*/
+
+.cut {clear: both;}
+.hidden {display: none;}
+
+
+.note {
+	background: #fff url(/i/eee-white-gradient.png) 0 -100px  repeat-x;
+
+	border-top: 3px solid #ff9933;
+	border-bottom: 3px solid #ff9933;
+	
+	border: 2px solid #ccc;
+	
+	padding: .5em 1em;
+	
+	margin: 2em 0;
+	/* make box a bit smaller */
+	/*width: 80%;*/
+}
+
+.note h3 {
+	color: #336699;
+}
+
+/*---------------------------------------------------
+=ul / ol
+---------------------------------------------------*/
+
+ul, ol {
+	padding: 0;
+	padding-left: 2em;
+	
+	margin: 1em 0;
+}
+
+
+ol li, ul li {
+	padding: 0;
+	margin: .5em 0;
+}
+
+ul {
+	list-style: outside square url(/i/bullet.png);
+}
+
+/* gfx numbers */
+/*
+ol.gfx {
+	list-style: none;
+}
+
+ol.gfx li {
+	margin: .5em 0;
+	
+	padding: 0;
+	padding-left: 35px;
+	padding-bottom: 35px;
+	
+	background: transparent url(/i/one.png) top left no-repeat;
+}
+
+
+ol.gfx li+li {
+	background: transparent url(/i/two.png) top left no-repeat;
+	
+}
+
+ol.gfx li+li+li {
+	background: transparent url(/i/three.png) top left no-repeat;
+}
+
+*/
+
+
+
+/* ---------------------------------------------------
+=top menu and search form
+----------------------------------------------------- */
+
+#top-nav {		
+	margin: 0;
+	margin-bottom: 1em;
+	
+	padding: 0;	
+	
+	/*background: transparent url(/i/logo2.jpg) top left no-repeat;    */
+}
+
+
+#top-nav form { 
+	/* move to the top right corner of #top-nav */
+	position: absolute;
+	
+	top: 10px;
+	right: 10px;
+}
+
+#top-nav ul {			
+	margin: 0;
+	padding: 0;
+	
+	/* auto-clear floated children */
+	overflow: hidden;		
+}
+
+#top-nav ul li {		
+	display: inline;	
+}
+
+#top-nav ul li:after {		
+	content: ' | ';
+}
+
+#top-nav ul li:last-child:after {		
+	content: '';
+}
+
+#top-nav ul li a:link, #top-nav ul li a:visited,
+#top-nav ul li a:hover, #top-nav ul li a:active{
+
+	font-weight: bold;
+	
+	text-transform: uppercase;	
+	border: none;
+	
+	letter-spacing: 1px;
+}
+
+
+/* ---------------------------------------------------
+=current page trick
+----------------------------------------------------- */
+
+#home-page #a_home:link, 
+#home-page #a_home:visited {
+	color: #666;
+	border: none;
+	
+	/*background: transparent url(/i/current.gif) bottom center no-repeat;	*/
+	
+	font-weight: normal;
+}
+
+#about-page #a_about:link, 
+#about-page #a_about:visited {
+	color: #666;
+	border: none;
+	
+	/*background: transparent url(/i/current.gif) bottom center no-repeat;	*/
+	
+	font-weight: normal;
+}
+
+
+#install-page #a_install:link, 
+#install-page #a_install:visited {
+	color: #666;
+	border: none;
+	
+	/*background: transparent url(/i/current.gif) bottom center no-repeat;	*/
+	
+	font-weight: normal;
+}
+
+
+#docs-page #a_docs:link, 
+#docs-page #a_docs:visited {
+	color: #666;
+	border: none;
+	
+	font-weight: normal;
+}
+
+
+
+#about-page #a_about:link, 
+#about-page #a_about:visited {
+	color: #666;
+	border: none;
+	
+	font-weight: normal;
+}
+

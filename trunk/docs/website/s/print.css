@@ -1,0 +1,103 @@
+/* help browser to not forget */
+body, p, li, td, th, dd, dt, h1, h2, h3, h4, h5, h6  
+{		
+	font: 12pt/150% Georgia, serif;
+}
+
+html, body
+{
+	background: white; 
+	color: black; 
+	
+	margin: 0;
+}
+
+body {
+	margin: .5cm; 
+	margin-right: 1cm; 
+	
+	padding: 0;
+}
+	
+form
+{
+	display: none;
+}
+
+/* --------------------
+=headings
+---------------------*/
+
+h1, h2, h3, h4, h5, h6 
+{
+	color: #333; font-weight: bold;
+}
+
+h1 {
+	font: bold 20pt Verdana, Helvetica, sans-serif; margin: 0cm;
+}
+
+h2 {
+	font-size: 16pt;
+}
+
+h3 {
+	font-size: 14pt;
+}
+
+
+/* --------------------
+links
+--------------------- */
+
+a img { 
+	border-style: none; 
+} 
+
+a:link, a:visited, a:hover, a:active
+{
+	color: #333; font-weight: bold; text-decoration: none; 
+}
+
+/* expand */
+a:after
+{	
+	content: ' (' attr(href) ')'; 	
+}
+
+
+
+/* --------------------
+=page blocks
+--------------------- */
+
+#main {
+	margin: 0;
+	padding: 0;
+	
+	width: auto;
+}
+
+#content
+{
+	margin: 0;
+	padding: 0;
+}
+
+.cut {
+	clear: both;
+}
+
+#top-nav 
+{
+	display: none;
+}
+
+/* expand */
+abbr:after, acronym:after
+{	
+	content: ' (' attr(title) ')'; 
+	border: none;
+}
+
+
