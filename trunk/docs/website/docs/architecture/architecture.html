@@ -7,9 +7,9 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
   Jens Lippmann, Marek Rouchal, Martin Wilck and others -->
 <HTML>
 <HEAD>
-<TITLE>PlugBoard Documentation</TITLE>
-<META NAME="description" CONTENT="PlugBoard Documentation">
-<META NAME="keywords" CONTENT="plugboard">
+<TITLE>PlugBoard Architecture</TITLE>
+<META NAME="description" CONTENT="PlugBoard Architecture">
+<META NAME="keywords" CONTENT="architecture">
 <META NAME="resource-type" CONTENT="document">
 <META NAME="distribution" CONTENT="global">
 
@@ -17,18 +17,18 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 <META NAME="Generator" CONTENT="LaTeX2HTML v2002-2-1">
 <META HTTP-EQUIV="Content-Style-Type" CONTENT="text/css">
 
-<LINK REL="STYLESHEET" HREF="plugboard.css">
+<LINK REL="STYLESHEET" HREF="architecture.css">
 
 </HEAD>
 
 <BODY >
 <!--Navigation Panel-->
 <IMG WIDTH="81" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next_inactive"
- SRC="file:/usr/local/share/lib/latex2html/icons/nx_grp_g.gif"> 
+ SRC="file:/usr/local/share/lib/latex2html/icons/nx_grp_g.png"> 
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up"
- SRC="file:/usr/local/share/lib/latex2html/icons/up_g.gif"> 
+ SRC="file:/usr/local/share/lib/latex2html/icons/up_g.png"> 
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous"
- SRC="file:/usr/local/share/lib/latex2html/icons/prev_g.gif">   
+ SRC="file:/usr/local/share/lib/latex2html/icons/prev_g.png">   
 <BR>
 <BR>
 <BR>
@@ -37,77 +37,37 @@ original version by:  Nikos Drakos, CBLU, University of Leeds
 <P>
 
 <P>
-
-<P>
-<H1 ALIGN="CENTER">PlugBoard Documentation</H1>
+<H1 ALIGN="CENTER">PlugBoard Architecture</H1>
 <DIV>
 
-<P ALIGN="CENTER"><STRONG><I>Italian Python User Group<!-- MATH
- $^{\textrm{TM}}$
- -->
-</I></STRONG></P>
+<P ALIGN="CENTER"><STRONG><I>Bruno Luca</I></STRONG></P>
 </DIV>
 
 <P>
 
-<H1><A NAME="SECTION01000000000000000000">
-Phylosophy</A>
+<H1><A NAME="SECTION00100000000000000000">
+1. Components</A>
 </H1>
-
-<P>
-<I>A simple preamble about the history and the project purposes.</I>
-
-<P>
-PlugBoard is born because of the need to create several plugin-based
-projects. These projects, currenly got a plugin management system
-many times different and not much organized. So, we decided to create
-a shared plugin system to use in all kinds of environments (my projects
-used GTK and console).
-
-<P>
-Actually, we chose Zope Interfaces to gain a good abstraction level
-for both the framework and its based applications.
-
-<P>
-The framework tries to offer as much utilities as possible to create
-a plugin-based application and at the same time to be as much flexible
-as possible, so that this framework could be applied to all kinds
-of projects.
-
-<P>
-An application based on this phylosophy should base everything on
-plugins, to let plugins be the core of the application as well, even
-the programmer decide to let the core be pluggable.
-
-<P>
-
-<H1><A NAME="SECTION02000000000000000000">
-Components</A>
-</H1>
-
-<P>
-<I>Simply explain what components are found in PlugBoard and how
-they could be connected each other.</I>
 
 <P>
 The main component of the framework is the <B>application interface</B>
-(<SMALL>IAPPLICATION)</SMALL> used for reference by all other components:
+(iapplication) used for reference by all other components:
 it should be initialized before using any other component. The application
 implementation should do nothing else that add some useful functions
 and hooks (such as adapters) to let the development be as the easier
 and faster as possible.
 
 <P>
-After the application initialization, registered plugins (<SMALL>IPLUGIN</SMALL>)
-must be found trough a plugin resource manager (<SMALL>IPLUGINRESOURCE</SMALL>).
+After the application initialization, registered plugins (iplugin)
+must be found trough a plugin resource manager (ipluginresource).
 The plugin resources then adds internally all found plugins and register
-itself (<I>the instance</I>) as an <SMALL>IAPPLICATION</SMALL> adapter,
+itself (<I>the instance</I>) as an iapplication adapter,
 so that the application could implement its own plugin resource following
 the interface scheme.
 
 <P>
 At this point, the application is configured and ready to be loaded
-using the context resource (<SMALL>ICONTEXTRESOURCE</SMALL>), which groups
+using the context resource (icontextresource), which groups
 some plugins and loads them passing for the following three states:
 
 <P>
@@ -128,18 +88,18 @@ plugins</I>
 
 <P>
 Just after the initialization of each plugin, the plugin instance
-is registered as an adapter of <SMALL>IAPPLICATION</SMALL> so plugins could
+is registered as an adapter of iapplication so plugins could
 reach other plugins adapting the application to the requested plugin
 interface.<A NAME="tex2html1"
-  HREF="#foot31"><SUP>1</SUP></A>
+  HREF="#foot28"><SUP>1.1</SUP></A>
 <P>
 The last optional but recomended component is the <B>engine</B>
-(<SMALL>IENGINE</SMALL>). It's something like a protocol that specifies
+(iengine). It's something like a protocol that specifies
 how plugin communicate each other trough events and contain some useful
 utilities for a specified environment. Mandatory engine components
-are the event dispather (<SMALL>IEVENTDISPATCHER</SMALL>, registered as
-an adaptiong for <SMALL>IPLUGIN</SMALL>) and its events (<SMALL>IEVENT</SMALL>,
-adaption for <SMALL>IEVENTDISPATCHER</SMALL>).
+are the event dispather (ieventdispatcher, registered as
+an adaptiong for iplugin) and its events (ievent,
+adaption for ieventdispatcher).
 
 <P>
 Then each plugin could have its own event dispatcher based on the
@@ -155,15 +115,15 @@ since it uses the engine abstraction.
 
 <P>
 
-<H1><A NAME="SECTION03000000000000000000">
-Builtin plugin resources</A>
+<H1><A NAME="SECTION00200000000000000000">
+2. Builtin plugin resources</A>
 </H1>
 
 <P>
 
-<H2><A NAME="SECTION03001000000000000000">
-Setuptools</A>
-</H2>
+<H1><A NAME="SECTION00210000000000000000">
+2.1 Setuptools</A>
+</H1>
 
 <P>
 The setuptools plugin resource is used to gain the list of application
@@ -183,15 +143,15 @@ from plugboard import plugin
 
 <P>
 
-<H1><A NAME="SECTION04000000000000000000">
-Builtin context resources</A>
+<H1><A NAME="SECTION00300000000000000000">
+3. Builtin context resources</A>
 </H1>
 
 <P>
 
-<H2><A NAME="SECTION04001000000000000000">
-XML</A>
-</H2>
+<H1><A NAME="SECTION00310000000000000000">
+3.1 XML</A>
+</H1>
 
 <P>
 This resource gains context informations from a <I>xml.dom.minidom.Element</I>
@@ -232,15 +192,15 @@ from xml.dom import minidom
 
 <P>
 
-<H1><A NAME="SECTION05000000000000000000">
-Builtin engines</A>
+<H1><A NAME="SECTION00400000000000000000">
+4. Builtin engines</A>
 </H1>
 
 <P>
 
-<H2><A NAME="SECTION05001000000000000000">
+<H1><A NAME="SECTION00410000000000000000">
 PlugBoard</A>
-</H2>
+</H1>
 
 <P>
 The PlugBoard engine doesn't define any utility for applications,
@@ -250,14 +210,14 @@ and call them when an <I>emit</I> is requested.
 
 <P>
 
-<H2><A NAME="SECTION05002000000000000000">
+<H1><A NAME="SECTION00420000000000000000">
 GTK</A>
-</H2>
+</H1>
 
 <P>
 This engine can be used in GTK 2.8 or above, since it exploits the
 creation of GTK signals<A NAME="tex2html2"
-  HREF="#foot93"><SUP>2</SUP></A> into a generic <I>GObject</I>. So, everytime a signal is requested
+  HREF="#foot92"><SUP>4.1</SUP></A> into a generic <I>GObject</I>. So, everytime a signal is requested
 to be created, a new gobject is instantiated. To grant the integrity
 of the first argument passed to the callback to be the plugin instance
 and not the gobject when firing the event, <I>connect_object</I>
@@ -265,15 +225,15 @@ is used instead of <I>connect</I>.
 
 <P>
 
-<H1><A NAME="SECTION06000000000000000000">
-Engine utilities</A>
+<H1><A NAME="SECTION00500000000000000000">
+5. Engine utilities</A>
 </H1>
 
 <P>
 
-<H2><A NAME="SECTION06001000000000000000">
-EventConnector</A>
-</H2>
+<H1><A NAME="SECTION00510000000000000000">
+5.1 EventConnector</A>
+</H1>
 
 <P>
 This class automatically connects its callable attributes beggining
@@ -282,7 +242,7 @@ be used is described in the object name itself, just after the ``on_''
 string: for example ``on_new'' would connect to the event ``new''.
 For instance, these callable objects (usually methods) could hold
 an attribute called <I>extra</I> which contains extra arguments to
-be passed to the <I>connect</I> method of <SMALL>IEVENT.</SMALL>
+be passed to the <I>connect</I> method of ievent.
 
 <P>
 A simple usage:
@@ -350,10 +310,26 @@ ec = BToAEventConnector(interfaces.IAPlugin(application))
 
 <P>
 
-<H1><A NAME="SECTION07000000000000000000">
+<H1><A NAME="SECTION00600000000000000000">
+6. Basic tutorial</A>
+</H1>
+
+<P>
+*TODO
+
+<P>
+
+<H1><A NAME="SECTION00700000000000000000">
+7. Advanced application</A>
+</H1>
+
+<P>
+*TODO
+
+<H1><A NAME="SECTION00800000000000000000">
 About this document ...</A>
 </H1>
- <STRONG>PlugBoard Documentation</STRONG><P>
+ <STRONG>PlugBoard Architecture</STRONG><P>
 This document was generated using the
 <A HREF="http://www.latex2html.org/"><STRONG>LaTeX</STRONG>2<tt>HTML</tt></A> translator Version 2002-2-1 (1.71)
 <P>
@@ -366,20 +342,20 @@ Copyright &#169; 1997, 1998, 1999,
 Mathematics Department, Macquarie University, Sydney.
 <P>
 The command line arguments were: <BR>
- <STRONG>latex2html</STRONG> <TT>-no_subdir -split 0 -show_section_numbers /tmp/lyx_tmpdir182BNLobm/lyx_tmpbuf0/plugboard.tex</TT>
+ <STRONG>latex2html</STRONG> <TT>-no_subdir -split 0 -show_section_numbers architecture.tex</TT>
 <P>
-The translation was initiated by  on 2006-02-09
+The translation was initiated by  on 2006-02-12
 <BR><HR><H4>Footnotes</H4>
 <DL>
-<DT><A NAME="foot31">...</A><A
- HREF="plugboard.html#tex2html1"><SUP>1</SUP></A></DT>
+<DT><A NAME="foot28">...</A><A
+ HREF="architecture.html#tex2html1"><SUP>1.1</SUP></A></DT>
 <DD>It's important to specify a different interface for all plugins. Note
 that registering an adaption replaces the previous one, so there can
 be only one interface implementation in each context.
 
 </DD>
-<DT><A NAME="foot93">... signals</A><A
- HREF="plugboard.html#tex2html2"><SUP>2</SUP></A></DT>
+<DT><A NAME="foot92">... signals</A><A
+ HREF="architecture.html#tex2html2"><SUP>4.1</SUP></A></DT>
 <DD>This can be done using the special class variable <I>__gsignals__</I>.
 Read PyGTK FAQs for more informations.
 
@@ -387,16 +363,16 @@ Read PyGTK FAQs for more informations.
 </DL><HR>
 <!--Navigation Panel-->
 <IMG WIDTH="81" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="next_inactive"
- SRC="file:/usr/local/share/lib/latex2html/icons/nx_grp_g.gif"> 
+ SRC="file:/usr/local/share/lib/latex2html/icons/nx_grp_g.png"> 
 <IMG WIDTH="26" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="up"
- SRC="file:/usr/local/share/lib/latex2html/icons/up_g.gif"> 
+ SRC="file:/usr/local/share/lib/latex2html/icons/up_g.png"> 
 <IMG WIDTH="63" HEIGHT="24" ALIGN="BOTTOM" BORDER="0" ALT="previous"
- SRC="file:/usr/local/share/lib/latex2html/icons/prev_g.gif">   
+ SRC="file:/usr/local/share/lib/latex2html/icons/prev_g.png">   
 <BR>
 <!--End of Navigation Panel-->
 <ADDRESS>
 
-2006-02-09
+2006-02-12
 </ADDRESS>
 </BODY>
 </HTML>
