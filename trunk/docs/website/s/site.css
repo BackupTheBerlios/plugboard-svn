@@ -6,7 +6,6 @@
 ---------------------------------------------------*/
 
 html {
-	/*background: #fff url(/i/subway-v.png) bottom right no-repeat;     */
 	background: #fff;
 }
 
@@ -47,7 +46,7 @@ h1, h2, h3, h4, h5, h6  {
 h1 {
 	height: 90px;
 	width: 300px;
-	background: #fff url(/i/subway-logo.jpg) bottom right no-repeat;     
+	background: #fff bottom right no-repeat;     
 }
 
 h1 span {
@@ -351,3 +350,10 @@ ol.gfx li+li+li {
 	font-weight: normal;
 }
 
+#dev-page #a_dev:link,
+#dev-page #a_dev:visited {
+        color: #666;
+        border: none;
+        
+        font-weight: normal;
+}
