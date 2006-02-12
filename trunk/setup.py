@@ -30,5 +30,5 @@ setup(
     """,
     scripts=['scripts/plugboardctl.py'],
     test_suite="plugboard.test.main.get_test_suite",
-#    install_requires=["zope_interface>=3.0.0b1"],
+    install_requires=["ZopeInterface>=3.1.0c1"],
     )
