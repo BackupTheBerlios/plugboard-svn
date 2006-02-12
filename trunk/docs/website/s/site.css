@@ -46,7 +46,7 @@ h1, h2, h3, h4, h5, h6  {
 h1 {
 	height: 90px;
 	width: 300px;
-	background: #fff bottom right no-repeat;     
+	background: #fff url(../i/logo.png) bottom right no-repeat;     
 }
 
 h1 span {
@@ -357,3 +357,4 @@ ol.gfx li+li+li {
         
         font-weight: normal;
 }
+
