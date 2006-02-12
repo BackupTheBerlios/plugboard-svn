@@ -38,5 +38,5 @@ setup(
     scripts=['scripts/plugboardctl.py'],
     test_suite="plugboard.test.main.get_test_suite",
     download_url="http://plugboard.berlios.de/install/",
-    install_requires=["ZopeInterface>=3.1.0c1"]
+    install_requires=["zope_interface>=3.1.0c1"]
     )
