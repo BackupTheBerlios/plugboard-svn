@@ -13,5 +13,5 @@ setup(
     SomePlugin = plugboardsimple.plugins.other:SomePlugin
     OtherPlugin = plugboardsimple.plugins.other:OtherPlugin
     """,
-    install_requires=["PlugBoard>=0.2"],
+    install_requires=["PlugBoard>=0.1.1"],
     )

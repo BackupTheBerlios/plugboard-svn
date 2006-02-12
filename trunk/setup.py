@@ -1,7 +1,14 @@
 #!/usr/bin/env python
-
 from setuptools import setup, find_packages
 import os
+from setuptools.command import easy_install
+old_easy_install = easy_install.easy_install
+class new_easy_install(old_easy_install):
+    def initialize_options(self, *args, **kw):
+        old_easy_install.initialize_options(self, *args, **kw)
+        self.find_links = "http://plugboard.berlios.de/install/"
+      
+easy_install.easy_install = new_easy_install
 
 setup(
     name="PlugBoard",
@@ -30,5 +37,6 @@ setup(
     """,
     scripts=['scripts/plugboardctl.py'],
     test_suite="plugboard.test.main.get_test_suite",
-    install_requires=["ZopeInterface>=3.1.0c1"],
+    download_url="http://plugboard.berlios.de/install/",
+    install_requires=["ZopeInterface>=3.1.0c1"]
     )
