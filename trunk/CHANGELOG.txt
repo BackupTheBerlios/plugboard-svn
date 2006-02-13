@@ -1,3 +1,6 @@
+13-Feb-2006
+	* Fixed adaption registering issue
+
 12-Feb-2006
 	* Added plugboard.berlios.de website docs
 

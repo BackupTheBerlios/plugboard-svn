@@ -39,9 +39,9 @@ class Application(object):
         except:
             pass
         if callable(obj):
-            return interface.implementedBy(obj)
+            return iter(interface.implementedBy(obj)).next()
         else:
-            return interface.providedBy(obj)
+            return iter(interface.providedBy(obj)).next()
             
     def register(self, ofrom, oto, name=''):
         self.registry.register([self._get_interface(ofrom)], self._get_interface(oto), name, oto)
