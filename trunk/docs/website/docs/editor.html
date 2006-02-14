@@ -1,0 +1,72 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <title>Editor20 &laquo; Documentation &laquo; PlugBoard</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <style media="screen" type="text/css">@import url('../s/site.css');</style>
+  <link media="print" href="../s/print.css" rel="stylesheet"
+ type="text/css" />
+</head>
+<body id="docs-page">
+<div id="main">
+<div class="hidden"><a href="#content">Skip to content</a></div>
+<div id="header">
+<h1><span>PlugBoard,
+the flexible framework to create plugin-based
+applications.</span></h1>
+<div id="top-nav">
+<ul>
+  <li><a id="a_home" href="/">Home</a></li>
+  <li><a id="a_about" href="../about/">About</a></li>
+  <li><a id="a_install" href="../install/">Install</a></li>
+  <li><a id="a_docs" href="../docs/">Documentation</a></li>
+  <li><a id="a_dev" href="../development/">Development</a></li>
+</ul>
+<form action="http://www.google.com/custom" method="get"> <input
+ name="sitesearch" value="plugboard.berlios.de" type="hidden" /><!-- style="vertical-align: middle" -->
+Search site with Google <input onfocus="this.select();" size="20"
+ maxlength="255" name="q" value="" type="text" /> </form>
+</div>
+</div>
+<div id="content">
+
+<h2>Create an editor in 20 minutes</h2>
+<h3>1. Introduction</h3>
+<p>This tutorial explains how to
+get working most of all PlugBoard components toghether.</p>
+<p>This document would like to be a first shot example made step by step for all parts of, so its target
+are mainly new comers to PlugBoard.</p>
+<p>However, before using this framework then understand this tutorial, you <b>must</b>
+know the <a href="http://www.zope.org/Products/ZopeInterface/">zope.interface</a>
+and <a href="http://peak.telecommunity.com/DevCenter/setuptools">setuptools</a> libraries.</p>
+<div class="note">
+<h3>Note</h3>
+<p>This tutorial uses some components which need to be able to access Python library path
+(for instance <code>site-packages</code>).</p>
+<p>We will use an XML config and <a href="http://www.pygtk.org">PyGTK 2.8</a>
+</div>
+
+<h3>2. Creating the project</h3>
+<p>Now let's create the skeleton directory structure:</p>
+<pre>plugboardctl.py create PlugEditor</pre>
+<p>Notice how this script created for you the <code>setup.py</code> file specifying inside the
+current version of PlugBoard as dependency and a starting entrypoint
+string for our application plugins.</p>
+
+<h3>3. The main file</h3>
+<p>PlugBoard, as described in the <a href="architecture.html">architecture document</a>, offers
+an <code>IApplication</code> interface which is the principal component of an application.</p>
+<p>Its implementation is found at <code>plugboard.application.Application</code>.</p>
+<p><i>under construction, sorry for the inconvenience</i></p>
+
+<div id="footer">
+<p><a href="#main">Top^</a>
+| All contents by <a href="http://www.deelan.com">deelan</a>,
+<a href="http://creativecommons.org/licenses/by-sa/2.5/">some
+rights
+reserved</a> | Page last modified
+Feb 12, 2006 </p>
+</div>
+</div>
+</body>
+</html>

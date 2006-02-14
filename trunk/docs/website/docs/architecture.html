@@ -28,75 +28,63 @@ Search site with Google <input onfocus="this.select();" size="20"
 </div>
 </div>
 <div id="content">
-<h2>architecture</h2>
+<h2>Architecture</h2>
 <br>
 <h3>1. Components</h3>
 <p>The main component of the framework is the <b>application interface</b>
-(<span style="font-family: monospace;">IApplication</span>) used for
+(<code>IApplication</code>) used for
 reference by all other components:
-it should be initialized before using any other component <a
- href="#foot1"><sup>1</sup></a>.
-The
-application
-implementation should do nothing else that add some useful functions
-and hooks (such as adapters) to let the development be as the easier
-and faster as possible.
+it should be initialized before using any other component.
 </p>
 <p>
-After the application initialization, registered plugins (<span
- style="font-family: monospace;">IPlugin</span>)
-must be found trough a plugin resource manager (<span
- style="font-family: monospace;">IPluginResource</span>).
+The application implementation should do nothing else that add some useful functions
+and hooks (such as adapters) to let the development be as the easier and faster as possible.
+</p>
+<p>
+After the application initialization, registered plugins (<code>IPlugin</code>)
+must be found trough a plugin resource manager (<code>IPluginResource</code>).
 The plugin resource then adds internally all found plugins and
-register
-itself (<i>the instance</i>) as an <span
- style="font-family: monospace;">IApplication</span> adapter for <span
- style="font-family: monospace;">IApplication</span>,
+register itself (<i>the instance</i>) as an adapter for <code>IApplication</code>,
 so that the application could implement its own plugin resource
-following
-the interface scheme.
+following the interface scheme.
 </p>
 <p>At this point, the application is configured and ready to be loaded
-using the context resource (<span style="font-family: monospace;">IContextResource</span>),
-which groups
-some plugins and loads them passing for the following three states:
+using the context resource (<code>IContextResource</code>),
+which groups some plugins and loads them passing for the following three states:
 </p>
 <ul>
-  <li><b>initialization</b>: loads all internal plugin variables
-without
-any interaction with other plugins </li>
+  <li><b>initialization</b>: loads all internal plugin variables without
+any interaction with other plugins</li>
   <li><b>preloading</b>: perform initialization actions with other
-plugins
-and their initialized options (e.g. connecting to plugin events) </li>
-  <li><b>loading:</b> this is the last step, where all plugins could
-perform
-any action to interact with other plugins </li>
+plugins and their initialized options (e.g. connecting to plugin events)</li>
+  <li><b>loading:</b> this is the last step, where all plugins could perform
+any action to interact with other plugins</li>
 </ul>
-<i>This loading feature is indeed to remove all dependencies among
-plugins</i>
+<i>This loading feature has the purpose to remove all dependencies among plugins</i>
 <p>Just after the initialization of each plugin, the plugin instance
-is registered as an adapter of <span style="font-family: monospace;">IApplication</span>
-so plugins could
-reach other plugins adapting the application to the requested plugin
-interface<sup> </sup><a href="#foot2"><sup>2</sup></a>.
+is registered as an adapter of <code>IApplication</code>
+so plugins could reach other plugins adapting the application to the requested plugin
+interface.
 </p>
-<p>The last optional but recommended component is the <b>engine</b>
-(<span style="font-family: monospace;">IEngine</span>). It's something
-like a protocol that specifies
-how plugin communicate each other trough events and contain some useful
-utilities for a specified environment. Mandatory engine components
-are the event dispather (<span style="font-family: monospace;">IEventDispatcher</span>,
-registered as
-an adaptiong for <span style="font-family: monospace;">IPlugin</span>)
-and its events (<span style="font-family: monospace;">IEvent</span>,
-adaption for <span style="font-family: monospace;">IEventDispatcher</span>).
+<div class="note">
+<h3>Note</h3>
+<p>It's important to specify a different interface for all plugins.
+Note that registering an adaption replaces the previous one, so there can
+be only one interface implementation in each context.</p>
+</div>
+<p>The last optional but recommended component is the <b>engine</b> (<code>IEngine</code>).
+It's something like a protocol that specifies how plugin communicate each other trough events
+and contain some useful utilities for a specified environment. Mandatory engine components
+are the event dispather (<code>IEventDispatcher</code>, registered as
+an adaptiong for <code>IPlugin</code>) and its events (<code>IEvent</code>,
+adaption for <code>IEventDispatcher</code>).
 </p>
 <p>Then each plugin could have its own event dispatcher based on the
 current engine to let other plugins connect to it.
 </p>
 <p>Event connecting is also simplified by the <b>event connector</b>.
 Its behavior consists in getting all objects contained in self starting
-with <i>"on_"</i> and connecting them as callbacks for the
+with "<code>on_</code>" and connecting them as callbacks for the
 rest of the object name as the event name to the specified plugin.
 Usually, it doesn't need to be implemented for each different engine
 since it uses the engine abstraction.
@@ -107,17 +95,12 @@ since it uses the engine abstraction.
 The setuptools plugin resource is used to gain the list of application
 plugins registered using setuptools entry points.
 </p>
-<p>A simple usage:
-</p>
-<p>
-</p>
-<blockquote>from plugboard import plugin
-</blockquote>
-<blockquote>plugin.SetuptoolsPluginResource(application,
-'application.entry.point').refresh()
-</blockquote>
-<p>
-</p>
+<p>A simple usage:</p>
+<pre>
+from plugboard import plugin
+pr = plugin.SetuptoolsPluginResource(application, 'application.plugins')
+pr.refresh()
+</pre>
 <h3>3. Builtin context resources</h3>
 <h3>3.1 XML</h3>
 <p>
@@ -126,144 +109,83 @@ element, looking in its children.
 </p>
 <p>A simple usage:
 </p>
-<blockquote>from xml.dom import minidom
-</blockquote>
-<p>
-</p>
-<blockquote>xmlstr = """&lt;root&gt;
-</blockquote>
-<p>
-</p>
-<blockquote>&lt;context name='ctx1'&gt;
-</blockquote>
-<p>
-</p>
-<blockquote>&lt;plugin path='app.plugins.APlugin' /&gt;
-</blockquote>
-<p>
-</p>
-<blockquote>&lt;plugin path='app.plugins.BPlugin' /&gt;
-</blockquote>
-<p>
-</p>
-<blockquote>&lt;/context&gt;
-</blockquote>
-<p>
-</p>
-<blockquote>"""
-</blockquote>
-<p>
-</p>
-<blockquote>from plugboard import context
-</blockquote>
-<p>
-</p>
-<blockquote>context.XMLContextResource(application,
-minidom.parseString(xmlstr).documentElement).refresh()
-</blockquote>
-<p>
-</p>
+<pre>
+<font color="blue">from</font> xml.dom <font color="blue">import</font> minidom
+xmlstr = """<font color="grey">&lt;root&gt;
+&lt;context name='ctx1'&gt;
+&lt;plugin path='app.plugins.APlugin' /&gt;
+&lt;plugin path='app.plugins.BPlugin' /&gt;
+&lt;/context&gt;</font>
+"""
+xml_element = minidom.parseString(xmlstr).documentElement)
+
+<font color="blue">from</font> plugboard <font color="blue">import</font> context
+cr = context.XMLContextResource(application, xml_element)
+cr.refresh()
+</pre>
 <h3>4. Builtin engines</h3>
-<h3>PlugBoard</h3>
+<h3>4.1 PlugBoard</h3>
 <p>
 The PlugBoard engine doesn't define any utility for applications,
 since it's the most general purpose engine. However, it has a really
 simple method for event dispatching: it stores observer callbacks
 and call them when an <i>emit</i> is requested.
 </p>
-<h3>GTK</h3>
+<h3>4.2 GTK</h3>
 <p>
 This engine can be used in GTK 2.8 or above, since it exploits the
-creation of GTK signals<a name="tex2html2"
- href="architecture/index.html#foot92"><sup>4.1</sup></a> into a
-generic <i>GObject</i>. So, everytime a signal is requested
-to be created, a new gobject is instantiated. To grant the integrity
-of the first argument passed to the callback to be the plugin instance
-and not the gobject when firing the event, <i>connect_object</i>
-is used instead of <i>connect</i>.
+creation of GTK signals into a
+generic <code>GObject</code>.
+</p>
+<div class="note">
+<h3>Note</h3>
+<p>This can be done using the special class variable <code>__gsignals__</code>, only available in <a href="http://www.pygtk.org">PyGTK</a> 2.8 or higher.</p>
+<p>Read <a href="http://www.async.com.br/faq/pygtk/index.py?req=index">PyGTK FAQs</a>
+for more informations.</p>
+</div>
+<p>
+So, everytime a signal is requested to be created, a new gobject is instantiated.
+To grant the integrity of the first argument passed to the callback to be the plugin instance
+and not the gobject when firing the event, <code>connect_object()</code>
+is used instead of <code>connect()</code>.
 </p>
 <h3>5. Engine utilities</h3>
 <h3>5.1 EventConnector</h3>
 <p>
 This class automatically connects its callable attributes beggining
 with <i>"on_"</i> to the specified plugin. The event name to
-be used is described in the object name itself, just after the ``on_
-string: for example ``on_new'' would connect to the event ``new''.
-For instance, these callable objects (usually methods) could hold
-an attribute called <i>extra</i> which contains extra arguments to
-be passed to the <i>connect</i> method of ievent.
+be used is described in the object name itself, just after the "<code>on_</code>"
+string: for instance "<code>on_new</code>" would connect to the event "<code>new</code>".
+</p>
+<p>
+These callable objects (usually methods) could hold an attribute called <code>extra</code>
+which contains extra arguments to be passed to the <code>connect()</code> method of <code>IEvent</code>.
 </p>
 <p>A simple usage:
 </p>
-<blockquote>from plugboard import plugin, engine
-</blockquote>
-<p>
-</p>
-<blockquote>from zope.interface import implements
-</blockquote>
-<p>
-</p>
-<blockquote>import interfaces
-</blockquote>
-<p>
-</p>
-<blockquote>class APlugin(plugin.Plugin):
-  <blockquote>implements(interface.IAPlugin) </blockquote>
-</blockquote>
-<p>
-</p>
-<blockquote>
-  <blockquote>def __init__(self, application):
-    <blockquote>self.dispatcher = engine.IEventDispatcher(self) </blockquote>
-  </blockquote>
-</blockquote>
-<p>
-</p>
-<blockquote>
-  <blockquote>
-    <blockquote>self.dispatcher.add_event('new', (str, 'Some data
-type')) </blockquote>
-def load(self, context):
-    <blockquote>self.dispatcher['new'].emit('Some data') </blockquote>
-  </blockquote>
-class BToAEventConnector(engine.EventConnector):
-  <blockquote>def on_new(self, plugin, data, extra):
-    <blockquote><i>...</i> </blockquote>
-  </blockquote>
-class BPlugin(plugin.Plugin):
-  <blockquote>implements(interfaces.IBPlugin) </blockquote>
-</blockquote>
-<p>
-</p>
-<blockquote>
-  <blockquote>def preload(self, application):
-    <blockquote>ec =
-BToAEventConnector(interfaces.IAPlugin(application)) </blockquote>
-  </blockquote>
-</blockquote>
-<p>
-</p>
-<blockquote>
-  <blockquote>
-    <blockquote>ec.on_new.extra = ('first extra argument',) </blockquote>
-  </blockquote>
-</blockquote>
-<hr>
-<h4>Footnotes</h4>
-<dl>
-  <dt>... <a name="foot1"><sup>1</sup></a></dt>
-  <dd>The <span style="font-family: monospace;">IApplication</span> is
-mostly used to adapt many components of the framework.</dd>
-  <dt>... <a name="foot2"><sup>2</sup></a></dt>
-  <dd>It's important to specify a different interface for all plugins.
-Note
-that registering an adaption replaces the previous one, so there can
-be only one interface implementation in each context. </dd>
-  <dt>... <a name="foot3"><sup>3</sup></a></dt>
-  <dd>This can be done using the special class variable <i>__gsignals__</i>.
-Read PyGTK FAQs for more informations. </dd>
-</dl>
+<pre>
+<font color="blue">from</font> plugboard <font color="blue">import</font> plugin, engine
+<font color="blue">from</font> zope.interface <font color="blue">import</font> implements
+<font color="blue">import</font> interfaces
+<font color="blue">class</font> APlugin(plugin.Plugin):
+&nbsp;&nbsp;implements(interface.IAPlugin)
+&nbsp;&nbsp;<font color="blue">def</font> __init__(self, application):
+&nbsp;&nbsp;&nbsp;&nbsp;self.dispatcher = engine.IEventDispatcher(self)
+&nbsp;&nbsp;&nbsp;&nbsp;self.dispatcher.add_event('<font color="grey">new</font>', (<font color="red">str</font>, '<font color="grey">Some data type</font>'))
+&nbsp;&nbsp;<font color="blue">def</font> load(self, context):
+&nbsp;&nbsp;&nbsp;&nbsp;self.dispatcher['<font color="grey">new</font>'].emit('<font color="grey">Some data</font>')
+
+<font color="blue">class</font> BToAEventConnector(engine.EventConnector):
+&nbsp;&nbsp;<font color="blue">def</font> on_new(self, plugin, data, extra):
+&nbsp;&nbsp;&nbsp;&nbsp;<font color="orange">...</font>
+<font color="blue">class</font> BPlugin(plugin.Plugin):
+&nbsp;&nbsp;implements(interfaces.IBPlugin)
+&nbsp;&nbsp;<font color="blue">def</font> preload(self, application):
+&nbsp;&nbsp;&nbsp;&nbsp;ec = BToAEventConnector(interfaces.IAPlugin(application))
+&nbsp;&nbsp;&nbsp;&nbsp;ec.on_new.extra = ('<font color="grey">first extra argument</font>',)
+</pre>
 </div>
+
 <!-- end content -->
 <div id="footer">
 <p><a href="#main">Top^</a> | All contents by <a

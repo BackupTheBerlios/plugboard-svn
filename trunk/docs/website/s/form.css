@@ -1,0 +1,96 @@
+form {
+	margin: 0;
+}
+
+
+fieldset {
+    margin: 0;
+    margin-top: 10px;
+
+    border-style: none;
+    padding: 0;
+}
+
+/* help text */
+#content fieldset p {
+    margin: 0;
+    padding: 0;
+    color: #666;
+    font-size: 85%
+}
+
+label {
+    display: block; 
+
+    margin:0;
+    margin-top: 10px; 
+    margin-bottom: 2px; 
+}
+
+
+input, textarea {
+    
+    font: bold 12px/100% Verdana, Helvetica, sans-serif;
+    color: #666;
+
+    padding: 4px;
+    margin: 0;    
+
+    border: 1px solid #ccc;
+
+    background: #fff;
+
+    /* raised 3d look */
+    border-top: 1px solid #666;
+    border-left: 1px solid #666;
+    border-bottom: 1px solid #ccc;
+    border-right: 1px solid #ccc;
+
+}
+
+textarea {    
+    line-height: 150%;    
+    width: 98%;
+}
+
+input[type='text'], input[type='password'], textarea {
+	background: #fff url(/i/bg-input.gif) top left repeat-x; 
+}
+
+input:focus, 
+textarea:focus {
+
+    border-color: #ff9933;
+    color: #333;  
+
+	background: #fff; /* reset bg image */
+}
+
+
+input[type='submit'], input[type='reset'], input[type='button']  {
+    
+    font: normal 100%/150% Verdana, Helvetica, sans-serif;
+
+    margin: 0;
+    margin-right: 5px; /* space between the next button */
+
+    padding: 4px;
+
+    color: #333;
+    background: #ddd;
+
+    /* raised 3d look */
+    border-top: 1px solid #eee;
+    border-left: 1px solid #eee;
+    border-bottom: 1px solid #666;
+    border-right: 1px solid #666;
+
+}
+
+input[type='submit']:focus, input[type='reset']:focus, input[type='button']:focus  {
+    background: #fff;
+}
+
+input[type='submit'] {
+    font-weight: bold;
+}

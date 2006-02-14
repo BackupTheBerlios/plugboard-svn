@@ -98,15 +98,15 @@ class PluginResource(object):
 # Plugins
 
 class SetuptoolsPluginResource(PluginResource):
-    def __init__(self, application, plugins_path):
+    def __init__(self, application, entrypoint_path):
         super(SetuptoolsPluginResource, self).__init__(application)
-        self.plugins_path = plugins_path
+        self.entrypoint_path = entrypoint_path
         
-    def refresh(self, plugins_path=None):
-        if plugins_path is not None:
-            self.plugins_path = plugins_path
+    def refresh(self, entrypoint_path=None):
+        if entrypoint_path is not None:
+            self.entrypoint_path = entrypoint_path
         self._plugins.clear()
-        for entrypoint in pkg_resources.iter_entry_points(self.plugins_path):
+        for entrypoint in pkg_resources.iter_entry_points(self.entrypoint_path):
             plugin_class = entrypoint.load()
             self._plugins.add(plugin_class)
 

@@ -29,7 +29,7 @@ setup(
         project_name = args[0]
         shutil.copytree(self.skeleton_path, project_name)
         project_path = os.path.abspath(project_name)
-        os.rename(os.path.join(project_path, '_app_'), os.path.join(project_path, project_name))
+        os.rename(os.path.join(project_path, '_app_'), os.path.join(project_path, project_name.lower()))
         setup_py = self.setup_tmpl % {'project_name': project_name,
                                       'project_title': project_name.title(),
                                       'plugboard_version': plugboard.__version__}

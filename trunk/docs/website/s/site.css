@@ -173,7 +173,7 @@ a:hover {
 
 
 .note {
-	background: #fff url(/i/eee-white-gradient.png) 0 -100px  repeat-x;
+	background: #fff url(../i/eee-white-gradient.png) 0 -100px  repeat-x;
 
 	border-top: 3px solid #ff9933;
 	border-bottom: 3px solid #ff9933;
@@ -209,7 +209,7 @@ ol li, ul li {
 }
 
 ul {
-	list-style: outside square url(/i/bullet.png);
+	list-style: outside square url(../i/bullet.png);
 }
 
 /* gfx numbers */
