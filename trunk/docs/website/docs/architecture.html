@@ -68,7 +68,7 @@ interface.
 </p>
 <div class="note">
 <h3>Note</h3>
-<p>It's important to specify a different interface for all plugins.
+<p>It's important to specify a different interface for each plugins.
 Note that registering an adaption replaces the previous one, so there can
 be only one interface implementation in each context.</p>
 </div>
@@ -97,8 +97,8 @@ plugins registered using setuptools entry points.
 </p>
 <p>A simple usage:</p>
 <pre>
-from plugboard import plugin
-pr = plugin.SetuptoolsPluginResource(application, 'application.plugins')
+<font color="blue">from</font> plugboard <font color="blue">import</font> plugin
+pr = plugin.SetuptoolsPluginResource(application, '<font color="grey">application.plugins</font>')
 pr.refresh()
 </pre>
 <h3>3. Builtin context resources</h3>
