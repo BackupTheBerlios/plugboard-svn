@@ -30,7 +30,7 @@ Search site with Google <input onfocus="this.select();" size="20"
 </div>
 <div id="content">
 
-<h2>Create an editor in 20 minutes</h2>
+<h2>How to create a flexible editor</h2>
 <h3>1. Introduction</h3>
 <p>This tutorial explains how to
 get working most of all PlugBoard components toghether.</p>
@@ -101,13 +101,50 @@ Once you have been done this, we can start writing plugins. In this kind of appl
 <p>If you don't know which declaring component of zope.interface the assignment to <code>get_window.return_type</code> is, please read the zope.interface documentation. This is called <b>tag</b>, used to add extra informations over an attribute or method.</p>
 </div>
 
+<h3>4.2 The implementation</h3>
+<p>Now, we need to implement <code>IMainWindowPlugin</code>, then write this code in <code>plugeditor/plugins/core.py</code>:</p>
+<pre>
+<font color="blue">from</font> plugboard <font color="blue">import</font> plugin
+<font color="blue">from</font> zope.interface <font color="blue">import</font> implements
+<font color="blue">import</font> interfaces, gtk
+
+<font color="blue">class</font> MainWindowPlugin(plugin.Plugin):
+&nbsp;&nbsp;implements(interfaces.IMainWindowPlugin)
+
+&nbsp;&nbsp;<font color="blue">def</font> __init__(self, application):
+&nbsp;&nbsp;&nbsp;&nbsp;self.widget = gtk.Window()
+&nbsp;&nbsp;&nbsp;&nbsp;self.widget.set_title("<font color="grey">PlugEditor</font>")
+
+&nbsp;&nbsp;<font color="blue">def</font> load(self, context):
+&nbsp;&nbsp;&nbsp;&nbsp;self.widget.show_all()
+
+&nbsp;&nbsp;<font color="blue">def</font> get_widget(self):
+&nbsp;&nbsp;&nbsp;&nbsp;<font color="blue">return</font> self.widget
+</pre>
+<p>The initialization just set the instance variable <code>widget</code> value, while on loading the window will be shown.</p>
+<div class="note">
+<h3>Note</h3>
+<p>If you don't know how a plugin is loaded into the application, please read the <a href="architecture.html">PlugBoard architecture documentation</a></p>
+</div>
+<p>Once we done this, we should add this new plugin to the entrypoint, so that <code>SetuptoolsPluginResource</code> can find it. Edit then the entrypoints in <code>setup.py</code> as follows:</p>
+<pre>
+entry_points="""<font color="grey">
+[plugeditor.plugins]
+MainWindowPlugin = plugeditor.plugins.core:MainWindowPlugin    
+</font>"""
+</pre>
+<p>The first name <code>MainWindowPlugin</code> is not important for the purposes of <code>SetuptoolsPluginResource</code>, however it could be a good idea to keep the name always clear because of other <code>IPluginResource</code> implementations for setuptools which could need it.</p>
+
+<h3>5. The context resource</h3>
+<p><i>coming soon</i></p>
+
 <div id="footer">
 <p><a href="#main">Top^</a>
 | All contents by <a href="http://www.deelan.com">deelan</a>,
 <a href="http://creativecommons.org/licenses/by-sa/2.5/">some
 rights
 reserved</a> | Page last modified
-Feb 12, 2006 </p>
+Feb 15, 2006</p>
 
 </div>
 </div>

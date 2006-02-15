@@ -8,7 +8,7 @@ setup(
     packages=find_packages(),
     entry_points="""
     [plugeditor.plugins]
-    
+    MainWindowPlugin = plugeditor.plugins.core:MainWindowPlugin
     """,
     install_requires=["PlugBoard>=0.2"],
     )
