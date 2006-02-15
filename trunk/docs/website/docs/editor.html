@@ -56,8 +56,50 @@ string for our application plugins.</p>
 <h3>3. The main file</h3>
 <p>PlugBoard, as described in the <a href="architecture.html">architecture document</a>, offers
 an <code>IApplication</code> interface which is the principal component of an application.</p>
-<p>Its implementation is found at <code>plugboard.application.Application</code>.</p>
-<p><i>under construction, sorry for the inconvenience</i></p>
+<p>Its implementation is found at <code>plugboard.application.Application</code>, so let's edit <code>plugeditor/main.py</code></p>
+<pre>
+<font color="blue">from</font> plugboard <font color="blue">import</font> application
+
+<font color="blue">def</font> main():
+&nbsp;&nbsp;app = application.Application()
+</pre>
+<p>Now we created our <code>IApplication</code> implementation instance. After that, we said in <code>setup.py</code> there's a string which defines a Python path for plugin entrypoints, for instance <b><code>plugeditor.plugins</code></b>. So, since we are using a setuptools-based plugin management to find installed plugins, install the <code>IPluginResource</code> as follows:
+<pre>
+<font color="blue">from</font> plugboard <font color="blue">import</font> application, plugin
+
+<font color="blue">def</font> main():
+&nbsp;&nbsp;app = application.Application()
+&nbsp;&nbsp;pr = plugin.SetuptoolsPluginResource(app, '<font color="grey">plugeditor.plugins</font>')
+&nbsp;&nbsp;pr.refresh()
+</pre>
+<p><code>SetuptoolsPluginResource</code> is a builtin implementation of <code>IPluginResource</code>, which accepts as the first argument the plugin entrypoint path. The method call <code>pr.refresh()</code> is used the retrieve the list of plugins from the given entrypoint path.</p>
+<div class="note">
+<h3>Note</h3>
+<p>The <code>refresh(entrypoint_path=None)</code> method accepts a keyword argument for specifying the entrypoint path for plugins. If no path has been given, it uses the one specified at the initialization.</p>
+<p>It also clears the plugins list before retrieving them again from the given entrypoint path.</p>
+</div>
+Once you have been done this, we can start writing plugins. In this kind of application, i chose to make the core (for instance the main window and other related things) as a plugin itself, so it could be changed as well using other implementations.
+
+<h3>4. The main window plugin</h3>
+<h3>4.1 The interface</h3>
+<p>Ok, now let's create the main window interface of the editor in <code>plugeditor/plugins/interfaces.py</code>:
+<pre>
+<font color="blue">from</font> plugboard.plugin <font color="blue">import</font> IPlugin
+<font color="blue">import</font> gtk
+
+<font color="blue">class</font> IMainWindowPlugin(IPlugin):
+&nbsp;&nbsp;<font color="blue">def</font> get_window():
+&nbsp;&nbsp;&nbsp;&nbsp;"""
+&nbsp;&nbsp;&nbsp;&nbsp;<font color="grey">Returns the main window widget</font>
+&nbsp;&nbsp;&nbsp;&nbsp;"""
+&nbsp;&nbsp;get_window.return_type = gtk.Window
+</pre>
+<p>Creating an interface for the main window plugin let the application to be very flexible for switching from an implementation to another.</p>
+<p>In the code above, we declare a class deriving from <code>IPlugin</code> which contains common methods and informations regarding plugins. The <code>get_window.return_type = gtk.Window</code> directive is just an information for developers who want to create an <code>IMainWindowPlugin</code> implementation.</p>
+<div class="note">
+<h3>Note</h3>
+<p>If you don't know which declaring component of zope.interface the assignment to <code>get_window.return_type</code> is, please read the zope.interface documentation. This is called <b>tag</b>, used to add extra informations over an attribute or method.</p>
+</div>
 
 <div id="footer">
 <p><a href="#main">Top^</a>
@@ -66,6 +108,7 @@ an <code>IApplication</code> interface which is the principal component of an ap
 rights
 reserved</a> | Page last modified
 Feb 12, 2006 </p>
+
 </div>
 </div>
 </body>
