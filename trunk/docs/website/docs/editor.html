@@ -56,8 +56,10 @@ string for our application plugins.</p>
 <h3>3. The main file</h3>
 <p>PlugBoard, as described in the <a href="architecture.html">architecture document</a>, offers
 an <code>IApplication</code> interface which is the principal component of an application.</p>
-<p>Its implementation is found at <code>plugboard.application.Application</code>, so let's edit <code>plugeditor/main.py</code></p>
+<p>Its implementation is found at <code>plugboard.application.Application</code>, so write this simply code:</p>
 <pre>
+<img src="../i/bullet.png" /> <font color="black">plugeditor/main.py</font>
+
 <font color="blue">from</font> plugboard <font color="blue">import</font> application
 
 <font color="blue">def</font> main():
@@ -65,6 +67,8 @@ an <code>IApplication</code> interface which is the principal component of an ap
 </pre>
 <p>Now we created our <code>IApplication</code> implementation instance. After that, we said in <code>setup.py</code> there's a string which defines a Python path for plugin entrypoints, for instance <b><code>plugeditor.plugins</code></b>. So, since we are using a setuptools-based plugin management to find installed plugins, install the <code>IPluginResource</code> as follows:
 <pre>
+<img src="../i/bullet.png" /> <font color="black">plugeditor/main.py</font>
+
 <font color="blue">from</font> plugboard <font color="blue">import</font> application, plugin
 
 <font color="blue">def</font> main():
@@ -82,8 +86,10 @@ Once you have been done this, we can start writing plugins. In this kind of appl
 
 <h3>4. The main window plugin</h3>
 <h3>4.1 The interface</h3>
-<p>Ok, now let's create the main window interface of the editor in <code>plugeditor/plugins/interfaces.py</code>:
+<p>Ok, now let's create the main window interface of the editor</code>:
 <pre>
+<img src="../i/bullet.png" /> <font color="black">plugeditor/plugins/interfaces.py</font>
+
 <font color="blue">from</font> plugboard.plugin <font color="blue">import</font> IPlugin
 <font color="blue">import</font> gtk
 
@@ -102,8 +108,10 @@ Once you have been done this, we can start writing plugins. In this kind of appl
 </div>
 
 <h3>4.2 The implementation</h3>
-<p>Now, we need to implement <code>IMainWindowPlugin</code>, then write this code in <code>plugeditor/plugins/core.py</code>:</p>
+<p>Now, we need to implement the previous created <code>IMainWindowPlugin</code> interface:</p>
 <pre>
+<img src="../i/bullet.png" /> <font color="black">plugeditor/plugins/core.py</font>
+
 <font color="blue">from</font> plugboard <font color="blue">import</font> plugin
 <font color="blue">from</font> zope.interface <font color="blue">import</font> implements
 <font color="blue">import</font> interfaces, gtk
@@ -126,12 +134,16 @@ Once you have been done this, we can start writing plugins. In this kind of appl
 <h3>Note</h3>
 <p>If you don't know how a plugin is loaded into the application, please read the <a href="architecture.html">PlugBoard architecture documentation</a></p>
 </div>
-<p>Once we done this, we should add this new plugin to the entrypoint, so that <code>SetuptoolsPluginResource</code> can find it. Edit then the entrypoints in <code>setup.py</code> as follows:</p>
+<p>Once we done this, we should add this new plugin to the entrypoint, so that <code>SetuptoolsPluginResource</code> can find it:</p>
 <pre>
+<img src="../i/bullet.png" /> <font color="black">setup.py</font>
+
+<b>[...]</b>
 entry_points="""<font color="grey">
 [plugeditor.plugins]
 MainWindowPlugin = plugeditor.plugins.core:MainWindowPlugin    
-</font>"""
+</font>""",
+<b>[...]</b>
 </pre>
 <p>The first name <code>MainWindowPlugin</code> is not important for the purposes of <code>SetuptoolsPluginResource</code>, however it could be a good idea to keep the name always clear because of other <code>IPluginResource</code> implementations for setuptools which could need it.</p>
 
