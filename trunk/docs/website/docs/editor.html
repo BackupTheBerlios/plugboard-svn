@@ -1,7 +1,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <title>Editor20 &laquo; Documentation &laquo; PlugBoard</title>
+  <title>Editor &laquo; Documentation &laquo; PlugBoard</title>
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <style media="screen" type="text/css">@import url('../s/site.css');</style>
   <link media="print" href="../s/print.css" rel="stylesheet"
@@ -63,7 +63,7 @@ an <code>IApplication</code> interface which is the principal component of an ap
 <font color="blue">from</font> plugboard <font color="blue">import</font> application
 
 <font color="blue">def</font> main():
-&nbsp;&nbsp;app = application.Application()
+  app = application.Application()
 </pre>
 <p>Now we created our <code>IApplication</code> implementation instance. After that, we said in <code>setup.py</code> there's a string which defines a Python path for plugin entrypoints, for instance <b><code>plugeditor.plugins</code></b>. So, since we are using a setuptools-based plugin management to find installed plugins, install the <code>IPluginResource</code> as follows:
 <pre>
@@ -72,9 +72,9 @@ an <code>IApplication</code> interface which is the principal component of an ap
 <font color="blue">from</font> plugboard <font color="blue">import</font> application, plugin
 
 <font color="blue">def</font> main():
-&nbsp;&nbsp;app = application.Application()
-&nbsp;&nbsp;pr = plugin.SetuptoolsPluginResource(app, '<font color="grey">plugeditor.plugins</font>')
-&nbsp;&nbsp;pr.refresh()
+  app = application.Application()
+  pr = plugin.SetuptoolsPluginResource(app, '<font color="grey">plugeditor.plugins</font>')
+  pr.refresh()
 </pre>
 <p><code>SetuptoolsPluginResource</code> is a builtin implementation of <code>IPluginResource</code>, which accepts as the first argument the plugin entrypoint path. The method call <code>pr.refresh()</code> is used the retrieve the list of plugins from the given entrypoint path.</p>
 <div class="note">
@@ -94,11 +94,11 @@ Once you have been done this, we can start writing plugins. In this kind of appl
 <font color="blue">import</font> gtk
 
 <font color="blue">class</font> IMainWindowPlugin(IPlugin):
-&nbsp;&nbsp;<font color="blue">def</font> get_window():
-&nbsp;&nbsp;&nbsp;&nbsp;"""
-&nbsp;&nbsp;&nbsp;&nbsp;<font color="grey">Returns the main window widget</font>
-&nbsp;&nbsp;&nbsp;&nbsp;"""
-&nbsp;&nbsp;get_window.return_type = gtk.Window
+  <font color="blue">def</font> get_window():
+    """
+    <font color="grey">Returns the main window widget</font>
+    """
+  get_window.return_type = gtk.Window
 </pre>
 <p>Creating an interface for the main window plugin let the application to be very flexible for switching from an implementation to another.</p>
 <p>In the code above, we declare a class deriving from <code>IPlugin</code> which contains common methods and informations regarding plugins. The <code>get_window.return_type = gtk.Window</code> directive is just an information for developers who want to create an <code>IMainWindowPlugin</code> implementation.</p>
@@ -117,17 +117,17 @@ Once you have been done this, we can start writing plugins. In this kind of appl
 <font color="blue">import</font> interfaces, gtk
 
 <font color="blue">class</font> MainWindowPlugin(plugin.Plugin):
-&nbsp;&nbsp;implements(interfaces.IMainWindowPlugin)
+  implements(interfaces.IMainWindowPlugin)
 
-&nbsp;&nbsp;<font color="blue">def</font> __init__(self, application):
-&nbsp;&nbsp;&nbsp;&nbsp;self.widget = gtk.Window()
-&nbsp;&nbsp;&nbsp;&nbsp;self.widget.set_title("<font color="grey">PlugEditor</font>")
+  <font color="blue">def</font> __init__(self, application):
+    self.widget = gtk.Window()
+    self.widget.set_title("<font color="grey">PlugEditor</font>")
 
-&nbsp;&nbsp;<font color="blue">def</font> load(self, context):
-&nbsp;&nbsp;&nbsp;&nbsp;self.widget.show_all()
+  <font color="blue">def</font> load(self, context):
+    self.widget.show_all()
 
-&nbsp;&nbsp;<font color="blue">def</font> get_widget(self):
-&nbsp;&nbsp;&nbsp;&nbsp;<font color="blue">return</font> self.widget
+  <font color="blue">def</font> get_widget(self):
+    <font color="blue">return</font> self.widget
 </pre>
 <p>The initialization just set the instance variable <code>widget</code> value, while on loading the window will be shown.</p>
 <div class="note">
@@ -148,7 +148,77 @@ MainWindowPlugin = plugeditor.plugins.core:MainWindowPlugin
 <p>The first name <code>MainWindowPlugin</code> is not important for the purposes of <code>SetuptoolsPluginResource</code>, however it could be a good idea to keep the name always clear because of other <code>IPluginResource</code> implementations for setuptools which could need it.</p>
 
 <h3>5. The context resource</h3>
-<p><i>coming soon</i></p>
+<p>The <code>IContextResource</code> is used to load specific plugins into a specific context. Each context contain a list of plugins which must be listed in <code>IPluginResource</code>. So, according to this concept, let's use the <code>XMLContextPlugin</code> implementation as follows:</p>
+<pre>
+<img src="../i/bullet.png" /> <font color="black">plugeditor/main.py</font>
+
+<font color="blue">from</font> plugboard <font color="blue">import</font> application, plugin, context
+<font color="blue">import</font> user, os
+<font color="blue">from</font> xml.dom <font color="blue">import</font> minidom
+<font color="blue">import</font> gtk
+
+config_file = os.path.join(user.home, '<font color="grey">.plugeditor</font>')
+
+<font color="blue">def</font> get_config():
+  <font color="blue">if</font> <font color="blue">not</font> os.path.exists(config_file):
+    file(config_file, '<font color="grey">w</font>').write('<font color="grey">&lt;plugeditor /&gt;</font>')
+  <font color="blue">try</font>:
+    <font color="blue">return</font> minidom.parse(config_file).documentElement
+  <font color="blue">except</font>:
+    <font color="blue">pass</font>
+
+<font color="blue">def</font> main():
+  app = application.Application()
+  pr = plugin.SetuptoolsPluginResource(app, '<font color="grey">plugeditor.plugins</font>')
+  pr.refresh()
+  config = get_config()
+  <font color="blue">if</font> <font color="blue">not</font> config:
+    <font color="blue">print</font> >> sys.stderr, "<font color="grey">No valid configuration file as been found</font>"
+  cr = context.XMLContextResource(app, config)
+  cr.refresh()
+  cr['<font color="grey">default</font>'].load()
+  gtk.main()
+</pre>
+<p>In the first lines of the code, we simply get the document element (<i>plugeditor</i>) of the XML config file, while in the <code>main()</code> function we pass to the <code>XMLContextResource</code> the got xml element.</p>
+<p>The XML document should have the following structure:</p>
+<pre>
+<img src="../i/bullet.png" /> <font color="black">~/.plugboard</font>
+
+&lt;plugeditor&gt;
+  &lt;context name='<font color="grey">default</font>'&gt;
+    &lt;plugin path='<font color="grey">plugeditor.plugins.core.MainWindowPlugin</font>' /&gt;
+  &lt;/context&gt;
+&lt;/plugeditor&gt;
+</pre>
+<p>Notice how we loaded the <i>default</i> context in the code. Logically, everything should be as much dynamic as possible with an appropriate UI to let the user define both contexts and plugins.</p>
+<div class="note">
+<h3>Note</h3>
+<p><code>XMLContextResource</code> initialization let you specify what names must be used for both elements and attributes; here's the implementation:</p>
+<pre>
+<font color="blue">def</font> __init__(self, application, dom_element=<font color="blue">None</font>,
+                   context_element='<font color="grey">context</font>', context_name='<font color="grey">name</font>',
+		   plugin_element='<font color="grey">plugin</font>', plugin_path='<font color="grey">path</font>')
+</pre>
+</div>
+<p>In the XML config, we defined the previous created plugin to be inserted in the context <i>default</i> then calling the <code>load</code> method will initialize, preload and load the requested plugin.</p>
+<p>This kind of structure, allows plugins to have different settings for each context, then each plugin can be present in many contexts.</p>
+
+<h3>6. Run the example</h3>
+<p>If you followed the above instructions and everything has gone well, you can run the example then a window should appear on the screen:</p>
+<pre>
+<img src="../i/bullet.png" /> <font color="black">(Privileged console)</font>
+
+python setup.py develop
+
+<img src="../i/bullet.png" /> <font color="black">(Python interpreter)</font>
+
+&gt;&gt;&gt; from plugeditor import main
+&gt;&gt;&gt; main.main()
+</pre>
+
+<p>Notice how we need to install PlugEditor in the Python path (trough the <code>develop</code> command) because of setuptools-based plugins. This behavior can change if you'll implement a different <code>IPluginResource</code> for your application without using setuptools.</p>
+<p>After we need to import modules and start manually the application; naturally this is done because we didn't provide any script for this task.</p>
+<p>If you want to see loaded plugins/contexts just add <code>print list(pr.get_plugins()), list(cr.get_contexts())</code> in <code>main()</code>.</p>
 
 <div id="footer">
 <p><a href="#main">Top^</a>
@@ -156,7 +226,7 @@ MainWindowPlugin = plugeditor.plugins.core:MainWindowPlugin
 <a href="http://creativecommons.org/licenses/by-sa/2.5/">some
 rights
 reserved</a> | Page last modified
-Feb 15, 2006</p>
+Feb 16, 2006</p>
 
 </div>
 </div>
