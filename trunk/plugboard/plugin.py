@@ -3,7 +3,7 @@
 
 from zope import interface
 import pkg_resources
-import types
+import types, traceback
 
 # Interfaces
 
@@ -107,7 +107,11 @@ class SetuptoolsPluginResource(PluginResource):
             self.entrypoint_path = entrypoint_path
         self._plugins.clear()
         for entrypoint in pkg_resources.iter_entry_points(self.entrypoint_path):
-            plugin_class = entrypoint.load()
+            try:
+                plugin_class = entrypoint.load()
+            except:
+                traceback.print_exc()
+                continue
             self._plugins.add(plugin_class)
 
 __all__ = ['IPlugin', 'IPluginResource', 'Plugin', 'PluginResource']

@@ -1,6 +1,6 @@
-PlugBoard 0.1.1
+PlugBoard 0.2
 
-This is a really minor-fixes and documentation enhancements:
-- Unstable WXEngine
-- Basic documentation
-- Fixed minor bugs
+This is a major-fixes and documentation release:
+- Fixed adaption registering
+- Added new documentation
+- Added a new builtin context resource
