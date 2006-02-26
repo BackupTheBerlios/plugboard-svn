@@ -128,6 +128,8 @@ Once you have been done this, we can start writing plugins. In this kind of appl
 
   <font color="blue">def</font> get_widget(self):
     <font color="blue">return</font> self.widget
+
+  def set_child(
 </pre>
 <p>The initialization just set the instance variable <code>widget</code> value, while on loading the window will be shown.</p>
 <div class="note">
@@ -216,9 +218,11 @@ python setup.py develop
 &gt;&gt;&gt; main.main()
 </pre>
 
-<p>Notice how we need to install PlugEditor in the Python path (trough the <code>develop</code> command) because of setuptools-based plugins. This behavior can change if you'll implement a different <code>IPluginResource</code> for your application without using setuptools.</p>
+<p>Notice how we need to install PlugEditor in the Python path (trough the <code>develop</code> command) because of the setuptools-based plugin. This behavior can change if you'll implement a different <code>IPluginResource</code> for your application without using setuptools.</p>
 <p>After we need to import modules and start manually the application; naturally this is done because we didn't provide any script for this task.</p>
-<p>If you want to see loaded plugins/contexts just add <code>print list(pr.get_plugins()), list(cr.get_contexts())</code> in <code>main()</code>.</p>
+<p>If you want to see loaded plugins/contexts just add <code>print list(pr.get_plugins()), list(cr.get_contexts())</code> in <code>main()</code>.</p
+
+
 
 <div id="footer">
 <p><a href="#main">Top^</a>
