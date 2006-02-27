@@ -1,5 +1,6 @@
 27-Feb-2006
 	* Released PlugBoard 0.2
+	* Added DictContextResource test
 	* Added ez_setup to skeleton
 
 25-Feb-2006

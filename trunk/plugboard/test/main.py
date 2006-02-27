@@ -43,6 +43,19 @@ class TestPlugBoard(unittest.TestCase):
         cr['test'].load()
         self.assertEqual(plugins.ITestPlugin(self.app).__class__, plugins.TestPlugin)
 
+    def test_dict_context_resource(self):
+        self._install_setuptools_pr()
+        contexts = {
+            'test': ['plugboard.test.plugins.TestPlugin'],
+        }
+        cr = context.DictContextResource(self.app, contexts)
+        cr.refresh()
+        cr['test'].load()
+        cr['test'].load()
+        self.assertEqual(plugins.ITestPlugin(self.app).__class__, plugins.TestPlugin)
+        cr['test'].load()
+        self.assertEqual(plugins.ITestPlugin(self.app).__class__, plugins.TestPlugin)
+
     def test_xml_context_resource(self):
         self._install_setuptools_pr()
         xml = """<test>
