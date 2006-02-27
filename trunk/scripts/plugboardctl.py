@@ -7,7 +7,9 @@ class CreateCommand(object):
     def __init__(self, main):
         self.main = main
         self.skeleton_path = resource_filename(Requirement.parse('PlugBoard'), 'plugboard/skeleton')
-        self.setup_tmpl = """from setuptools import setup, find_packages
+        self.setup_tmpl = """from ez_setup import use_setuptools
+use_setuptools()
+from setuptools import setup, find_packages
 
 setup(
     name="%(project_title)s",

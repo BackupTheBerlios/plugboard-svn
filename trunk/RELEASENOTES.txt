@@ -3,4 +3,5 @@ PlugBoard 0.2
 This is a major-fixes and documentation release:
 - Fixed adaption registering
 - Added new documentation
-- Added a new builtin context resource
+- Added a new builtin context resource DictContextResource
+- Minor fixes
